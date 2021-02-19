@@ -75,11 +75,17 @@ python3 main.py -f onion
 
 ### 🔩 Logs e Screenshots
 
-Explique que eles verificam esses testes e porquê.
+Todo arquivo de log gerado sera salvo com a extensão *.json:
 
 ```
-Dar exemplos
+utils/log
 ```
+Toda screenshot será salva e enviada para o misp pelo diretorio:
+
+```
+utils/screenshot
+```
+
 
 ### Tech
 
