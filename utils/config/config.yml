@@ -1,0 +1,145 @@
+database_name: "utils/database/"
+database_path: "news.db"
+headless: true
+debug: false
+webdriver_path: "utils/webdriver/geckodriver"
+save_path_log: "utils/log"
+
+
+###### Essa parte ainda não esta sendo utilizada será adicionada na próxima versão
+onion_urls:
+- group:
+     name: "http://hpoo4dosa3x4ognfxpqcrjwnsigvslm7kv6hvmhh2yqczaxy3j6qnwad.onion"
+     id:
+- group:
+     name: "http://xfr3txoorcyy7tikjgj5dk3rvo3vsrpyaxnclyohkbfp3h277ap4tiad.onion"
+     id:
+- group:
+     name: "http://37rckgo66iydpvgpwve7b2el5q2zhjw4tv4lmyewufnpx4lhkekxkoqd.onion"
+     id:
+- group:
+     name: "http://p6o7m73ujalhgkiv.onion"
+     id:
+- group:
+     name: "http://hxt254aygrsziejn.onion"
+     id:
+- group:
+     name: "http://ekbgzchl6x2ias37.onion"
+     id:
+- group:
+     name: "http://rnfdsgm6wb6j6su5txkekw4u4y47kp2eatvu7d6xhyn5cs4lt4pdrqqd.onion"
+     id:
+- group:
+     name: "http://dnpscnbaix6nkwvystl3yxglz7nteicqrou3t75tpcc5532cztc46qyd.onion"
+     id:
+- group:
+     name: "http://sekhmetleaks.top"
+     id:
+- group:
+     name: "http://wqmfzni2nvbbpk25.onion"
+     id:
+- group:
+     name: "http://avaddongun7rngel.onion/disclosed"
+     id:
+- group:
+     name: "http://fylszpcqfel7joif.onion/news"
+     id:
+- group:
+     name: "http://nbzzb6sa6xuura2z.onion"
+     id:
+- group:
+     name: "http://ekbgzchl6x2ias37.onion"
+     id:
+- group:
+     name: "http:// darksidedxcftmqa.onion"
+     id:
+- group:
+     name: "http://hxt254aygrsziejn.onion"
+     id:
+- group:
+     name: "http://msaoyrayohnp32tcgwcanhjouetb5k54aekgnwg7dcvtgtecpumrxpqd.onion"
+     id:
+- group:
+     name: "http://mountnewsokhwilx.onion"
+     id:
+- group:
+     name: "http://egregoranrmzapcv.onion"
+     id:
+- group:
+     name: "http://37rckgo66iydpvgpwve7b2el5q2zhjw4tv4lmyewufnpx4lhkekxkoqd.onion"
+     id:
+- group:
+     name: "http://pay2key2zkg7arp3kv3cuugdaqwuesifnbofun4j6yjdw5ry7zw2asid.onion"
+     id:
+- group:
+     name: "http://rnsm777cdsjrsdlbs4v5qoeppu3px6sb2igmh53jzrx7ipcrbjz5b2ad.onion"
+     id:
+
+blogs:
+ - group:
+    name: https://cyware.com/cyber-security-news-articles
+    id: 
+ - group:
+    name: https://portswigger.net/daily-swig
+    id: 
+ - group:
+    name: https://threatpost.com/
+    id: 
+ - group:
+    name: https://thehackernews.com/
+    id: 
+ - group:
+    name: https://www.tripwire.com/state-of-security/
+    id: 
+ - group:
+    name: https://www.reuters.com/subjects/cybersecurity
+    id: 
+ - group:
+    name: https://www.bbc.com/news/topics/cz4pr2gd85qt/cyber-security
+    id: 
+ - group:
+    name: https://www.bbc.com/news/topics/cp3mvpdp1r2t/cyber-attacks
+    id: 
+ - group:
+    name: https://www.bbc.com/news/topics/c1xp19421ezt/cyber-crime
+    id: 
+ - group:
+    name: https://www.darkreading.com/
+    id: 
+ - group:
+    name: https://www.securityweek.com/
+    id: 
+ - group:
+    name: https://www.bleepingcomputer.com/
+    id: 
+ - group:
+    name: https://gbhackers.com/
+    id: 
+ - group:
+    name: http://techgenix.com/
+    id: 
+ - group:
+    name: https://beta.virusbay.io/
+    id: 
+ - group:
+    name: https://exploit.kitploit.com/
+    id: 
+ - group:
+    name: https://www.hackerpom.com/feed
+    id: 
+ - group:
+    name: www.intezer.com/blog/
+    id: 
+ - group:
+    name: http://www.vmray.com/analyses/
+    id: 
+ - group:
+    name: https://www.hybrid-analysis.com/file-collections
+    id: 
+ - group:
+    name: https://www.virustotal.com/gui/hunting-overview
+    id: 
+ - group:
+     name: "xss.is"
+     id:
+         
