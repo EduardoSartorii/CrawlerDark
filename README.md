@@ -1,6 +1,6 @@
 # Crawler News
 
-[![N|Solid](https://uploaddeimagens.com.br/images/003/091/892/original/dark.png)](https://nodesource.com/products/nsolid)
+[![N|Solid](https://uploaddeimagens.com.br/images/003/091/892/original/dark.png =200x)](https://nodesource.com/products/nsolid)
 
 Busca de vazamentos na Dark Web
 
