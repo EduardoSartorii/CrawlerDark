@@ -1,0 +1,7 @@
+selenium<4
+urllib3<2
+beautifulsoup4
+PyYAML
+Pillow
+pytesseract
+pymisp
