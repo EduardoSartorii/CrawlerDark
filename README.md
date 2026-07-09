@@ -1,11 +1,78 @@
-# Crawler News
+# Threat Hunting Collection Platform
 
-[![N|Solid](https://uploaddeimagens.com.br/images/003/091/892/original/dark.png)](https://nodesource.com/products/nsolid)
+Plataforma corporativa de Threat Hunting Collection para OSINT, Brand Monitoring,
+VIP Monitoring, Dark Web/Deep Web Monitoring, Credential Hunting, IOC Hunting,
+Leak Hunting, Campaign Discovery, correlação, enriquecimento, scoring,
+persistência, exportação e auditoria.
 
-Busca de vazamentos na Dark Web
+O projeto agora segue Clean Architecture, Domain Driven Design, Hexagonal
+Architecture, Event Driven Architecture e Plugin Pattern. O core não conhece
+detalhes de infraestrutura; conectores, storage, exportadores, scheduler, CLI,
+observabilidade e integrações são adapters substituíveis.
 
-  - Busca em onion de Threat actor
-  - Adiciona informação no MISP
+## Arquitetura
+
+A documentação completa está em [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+Pipeline obrigatório:
+
+`Connector -> Parser -> Extractor -> Normalizer -> Detection Engine -> Scoring Engine -> Correlation Engine -> Deduplication Engine -> Enrichment Engine -> Persistence -> Export`
+
+## Stack
+
+- Python 3.12+
+- Poetry
+- Pydantic V2
+- SQLAlchemy 2 + Alembic
+- httpx, BeautifulSoup4, lxml
+- PyMISP
+- Redis-ready architecture
+- APScheduler
+- structlog
+- PyYAML
+- pytest
+- Typer
+- Dependency Injector
+- OpenTelemetry
+- Prometheus Client
+
+## Comandos CLI
+
+```bash
+poetry install
+poetry run hunt run reddit
+poetry run hunt run github
+poetry run hunt run telegram
+poetry run hunt run social
+poetry run hunt run darkweb
+poetry run hunt run all
+poetry run hunt connector enable reddit
+poetry run hunt connector disable reddit
+poetry run hunt scheduler run
+poetry run hunt export misp
+poetry run hunt export splunk
+poetry run hunt export elastic
+poetry run hunt score test
+```
+
+## Configuração
+
+As regras de detecção, scoring, conectores, OPSEC, storage, exportadores e jobs
+ficam em [`config/default.yml`](config/default.yml). Nenhuma regra de negócio de
+detecção fica hardcoded.
+
+## Testes
+
+```bash
+poetry run pytest
+```
+
+---
+
+## Conteúdo legado
+
+As anotações abaixo pertencem ao crawler original e foram preservadas como
+referência histórica.
 
 # New Features!
 

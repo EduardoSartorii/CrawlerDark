@@ -1,0 +1,86 @@
+connectors:
+  github:
+    enabled: true
+    opsec_profile: default
+    items:
+      - title: "Potential credential leak for ACME"
+        description: "Repository mentions admin@acme.test, api_key=secret, and acme.test login portal."
+        url: "https://github.com/example/leak"
+        tags: ["credential", "brand"]
+  reddit:
+    enabled: true
+    items: []
+  telegram:
+    enabled: true
+    items: []
+  darkweb:
+    enabled: true
+    opsec_profile: tor
+    items: []
+opsec_profiles:
+  default:
+    user_agent: "ThreatHuntingCollector/0.1"
+    rate_limit_per_minute: 60
+    retries: 2
+    backoff_seconds: 1
+  tor:
+    socks_proxy: "socks5://127.0.0.1:9050"
+    user_agent: "Mozilla/5.0"
+    rate_limit_per_minute: 20
+    retries: 3
+    backoff_seconds: 2
+connector_opsec_profiles:
+  darkweb: tor
+detection_rules:
+  - name: "credential keyword"
+    type: "keyword"
+    values: ["api_key", "password", "credential", "login"]
+    weight: 20
+    confidence: 0.8
+    tags: ["credential"]
+  - name: "corporate email"
+    type: "regex"
+    pattern: "\\b[A-Za-z0-9._%+-]+@acme\\.test\\b"
+    weight: 25
+    confidence: 0.9
+    tags: ["vip", "brand"]
+  - name: "indicator threshold"
+    type: "threshold"
+    weight: 10
+    confidence: 0.7
+    metadata:
+      count: 2
+scoring:
+  base_score: 5
+  auto_export_threshold: 70
+  weights:
+    keyword: 1.0
+    regex: 1.2
+    threshold: 1.0
+    indicator_count: 2.0
+    sensitive_match: 15.0
+    source:github: 5.0
+  severity_thresholds:
+    low: 10
+    medium: 35
+    high: 65
+    critical: 85
+storage:
+  backend: "json"
+  path: "data/findings.json"
+exporters:
+  json:
+    enabled: true
+    path: "data/export/findings.json"
+  csv:
+    enabled: true
+    path: "data/export/findings.csv"
+  misp:
+    enabled: false
+enrichment:
+  tenant: "default"
+  confidence_policy: "weighted"
+scheduler:
+  jobs:
+    - target: "github"
+      interval_seconds: 3600
