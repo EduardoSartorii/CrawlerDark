@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Annotated
 
 import typer
 
@@ -52,60 +53,60 @@ def _run_connector(name: str, config_path: str) -> list[Finding]:
     return findings
 
 
-CONFIG_OPTION = typer.Option("config/default.yml", "--config", "-c", help="Path to the YAML configuration file.")
+ConfigPath = Annotated[str, typer.Option("--config", "-c", help="Path to the YAML configuration file.")]
 
 
 @run_app.command("reddit")
-def run_reddit(config: str = CONFIG_OPTION) -> None:
+def run_reddit(config: ConfigPath = "config/default.yml") -> None:
     """Run the Reddit connector."""
 
     _run_connector("reddit", config)
 
 
 @run_app.command("github")
-def run_github(config: str = CONFIG_OPTION) -> None:
+def run_github(config: ConfigPath = "config/default.yml") -> None:
     """Run the GitHub connector."""
 
     _run_connector("github", config)
 
 
 @run_app.command("telegram")
-def run_telegram(config: str = CONFIG_OPTION) -> None:
+def run_telegram(config: ConfigPath = "config/default.yml") -> None:
     """Run the Telegram connector."""
 
     _run_connector("telegram", config)
 
 
 @run_app.command("social")
-def run_social(config: str = CONFIG_OPTION) -> None:
+def run_social(config: ConfigPath = "config/default.yml") -> None:
     """Run social connectors."""
 
     _run_connector("social", config)
 
 
 @run_app.command("darkweb")
-def run_darkweb(config: str = CONFIG_OPTION) -> None:
+def run_darkweb(config: ConfigPath = "config/default.yml") -> None:
     """Run dark web connectors."""
 
     _run_connector("darkweb", config)
 
 
 @run_app.command("all")
-def run_all(config: str = CONFIG_OPTION) -> None:
+def run_all(config: ConfigPath = "config/default.yml") -> None:
     """Run every enabled connector."""
 
     _run_connector("all", config)
 
 
 @connector_app.command("enable")
-def enable_connector(name: str, config: str = CONFIG_OPTION) -> None:
+def enable_connector(name: str, config: ConfigPath = "config/default.yml") -> None:
     """Enable a connector in the YAML configuration."""
 
     _set_connector_state(name, True, config)
 
 
 @connector_app.command("disable")
-def disable_connector(name: str, config: str = CONFIG_OPTION) -> None:
+def disable_connector(name: str, config: ConfigPath = "config/default.yml") -> None:
     """Disable a connector in the YAML configuration."""
 
     _set_connector_state(name, False, config)
@@ -128,7 +129,7 @@ def _set_connector_state(name: str, enabled: bool, config: str) -> None:
 
 
 @scheduler_app.command("run")
-def run_scheduler(config: str = CONFIG_OPTION) -> None:
+def run_scheduler(config: ConfigPath = "config/default.yml") -> None:
     """Start APScheduler jobs."""
 
     settings, container = _container(config)
@@ -138,28 +139,28 @@ def run_scheduler(config: str = CONFIG_OPTION) -> None:
 
 
 @export_app.command("misp")
-def export_misp(config: str = CONFIG_OPTION) -> None:
+def export_misp(config: ConfigPath = "config/default.yml") -> None:
     """Run all connectors and export findings that exceed MISP threshold."""
 
     _run_connector("all", config)
 
 
 @export_app.command("splunk")
-def export_splunk(config: str = CONFIG_OPTION) -> None:
+def export_splunk(config: ConfigPath = "config/default.yml") -> None:
     """Run all connectors with configured Splunk exporter."""
 
     _run_connector("all", config)
 
 
 @export_app.command("elastic")
-def export_elastic(config: str = CONFIG_OPTION) -> None:
+def export_elastic(config: ConfigPath = "config/default.yml") -> None:
     """Run all connectors with configured Elasticsearch/OpenSearch exporter."""
 
     _run_connector("all", config)
 
 
 @score_app.command("test")
-def score_test(config: str = CONFIG_OPTION) -> None:
+def score_test(config: ConfigPath = "config/default.yml") -> None:
     """Score a synthetic finding using configured rules and weights."""
 
     _, container = _container(config)
