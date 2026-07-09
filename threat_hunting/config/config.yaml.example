@@ -1,0 +1,44 @@
+# Threat Hunting Platform — Example Configuration
+# Copy to config.yaml and fill in your values.
+# All sensitive values should be set via environment variables instead.
+
+# Platform settings
+debug: false
+environment: production
+log_level: INFO
+json_logs: true
+
+# Collection settings
+default_collection_limit: 100
+export_threshold: 7.0
+dedup_window_hours: 24
+dedup_similarity_threshold: 0.90
+
+# Database
+database:
+  backend: sqlite          # sqlite or postgresql
+  url: "sqlite+aiosqlite:///./data/threat_hunting.db"
+  # For PostgreSQL:
+  # url: "postgresql+asyncpg://user:pass@localhost:5432/threat_hunting"
+
+# Redis (caching, rate limiting)
+redis:
+  url: "redis://localhost:6379/0"
+
+# MISP Integration
+misp:
+  url: ""                  # https://your-misp-instance.example.com
+  key: ""                  # Set via MISP_KEY env var
+  verify_ssl: true
+  auto_export_threshold: 7.0
+
+# OPSEC
+opsec:
+  default_proxy: ""        # http://proxy:port or socks5://proxy:port
+  tor_proxy: "socks5://127.0.0.1:9050"
+  requests_per_minute: 30
+  max_retries: 3
+
+# Metrics
+metrics_enabled: true
+metrics_port: 9090
