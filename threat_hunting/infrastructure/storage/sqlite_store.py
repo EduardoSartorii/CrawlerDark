@@ -93,6 +93,10 @@ class SqliteUnitOfWork:
 
     def _connect(self) -> sqlite3.Connection:
         try:
+            if self._path != ":memory:":
+                parent = os.path.dirname(self._path)
+                if parent:
+                    os.makedirs(parent, exist_ok=True)
             conn = sqlite3.connect(self._path)
             conn.executescript(_SCHEMA)
             return conn

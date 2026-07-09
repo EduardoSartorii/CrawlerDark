@@ -49,9 +49,11 @@ class AuditLogSubscriber:
         self.records.append(event.name.value)
         info = getattr(self._logger, "info", None)
         if callable(info):
+            # Note: 'event' is structlog's positional message arg, so the event
+            # name is passed under a distinct key to avoid a kwarg collision.
             info(
                 "audit_event",
-                event=event.name.value,
+                event_type=event.name.value,
                 run_id=getattr(event, "run_id", None),
                 occurred_at=event.occurred_at.isoformat(),
             )

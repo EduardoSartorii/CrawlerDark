@@ -1,0 +1,69 @@
+# =============================================================================
+# Threat Hunting Platform - main settings
+# -----------------------------------------------------------------------------
+# Everything the platform needs at runtime is data here. Environment variables
+# prefixed with TH_ override selected values (see config/settings.py).
+# =============================================================================
+
+storage:
+  backend: sqlite          # memory | json | sqlite (postgres/opensearch = plugins)
+  path: data/findings.db
+
+export:
+  default_exporter: json
+  output_dir: exports
+  auto_export_enabled: false   # when true, findings above the threshold go to MISP
+  auto_export_target: misp
+  score_threshold: 70.0        # score >= threshold => high-severity event / auto-export
+
+opsec:
+  offline: true            # true => no network egress (safe default for CI/sandbox)
+  profiles:
+    default:
+      name: default
+      user_agents:
+        - "Mozilla/5.0 (X11; Linux x86_64; rv:123.0) Gecko/20100101 Firefox/123.0"
+      rate_limit:
+        requests: 10
+        per_seconds: 1.0
+      max_retries: 3
+      backoff_factor: 0.5
+    tor:
+      name: tor
+      socks5_proxy: "socks5://127.0.0.1:9050"
+      rate_limit:
+        requests: 2
+        per_seconds: 1.0
+  connector_profiles:
+    darkweb: tor
+
+observability:
+  log_level: INFO
+  json_logs: true
+  service_name: threat_hunting
+
+# Runtime enable/disable overrides for connectors (name: bool).
+connectors_enabled: {}
+
+# Detection: regex rules are loaded dynamically (id -> pattern/weight).
+detection_regex_rules:
+  aws_access_key:
+    pattern: "AKIA[0-9A-Z]{16}"
+    weight: 30.0
+  private_key_block:
+    pattern: "-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"
+    weight: 35.0
+  jwt_token:
+    pattern: "eyJ[A-Za-z0-9_-]{10,}\\.[A-Za-z0-9_-]{10,}\\.[A-Za-z0-9_-]{10,}"
+    weight: 20.0
+
+# Inline YARA rules (id -> source). Applied only when yara-python is installed.
+yara_rules: {}
+
+detection_whitelist:
+  - "this is a drill"
+detection_blacklist:
+  - "ransomware-as-a-service"
+detection_min_matches: 1
+
+watchlists_file: config/watchlists.yml

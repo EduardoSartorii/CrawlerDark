@@ -1,0 +1,38 @@
+# =============================================================================
+# Watchlists, keywords and threat actors
+# -----------------------------------------------------------------------------
+# Consumed by the detection engine (KeywordRule / ThreatActorRule). Every term
+# is data: add brands, VIPs, domains, documents, wallets, etc. here — no code
+# change required. A future Django admin will edit the same model.
+# =============================================================================
+
+watchlists:
+  - name: brands
+    description: Monitored brands and corporate domains.
+    keywords:
+      - { term: "ACME Corp", type: brand, weight: 20.0 }
+      - { term: "acme-corp.com", type: domain, weight: 18.0 }
+
+  - name: vips
+    description: Executives and VIPs under monitoring.
+    keywords:
+      - { term: "jane.ceo@acme-corp.com", type: vip, weight: 25.0 }
+      - { term: "John Doe", type: executive, weight: 15.0 }
+
+  - name: leak_terms
+    description: Generic leak / breach vocabulary.
+    keywords:
+      - { term: "database dump", type: generic, weight: 12.0 }
+      - { term: "fullz", type: generic, weight: 15.0 }
+      - { term: "combolist", type: generic, weight: 15.0 }
+
+threat_actors:
+  - name: LockBit
+    aliases: ["lockbit3", "lockbit black", "lockbit affiliate"]
+    motivation: financial
+    description: Ransomware-as-a-service operation.
+    tags: ["ransomware"]
+  - name: ALPHV
+    aliases: ["blackcat", "alphv/blackcat"]
+    motivation: financial
+    tags: ["ransomware"]
