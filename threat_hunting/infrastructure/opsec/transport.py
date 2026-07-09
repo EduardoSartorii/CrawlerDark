@@ -27,15 +27,17 @@ class RateLimiter:
         self._min_interval = min_interval
         self._clock = clock
         self._sleep = sleep
-        self._last = 0.0
+        self._last: float | None = None  # None => no request issued yet
 
     def wait(self) -> None:
         """Block until at least ``min_interval`` has passed since the last call."""
         now = self._clock()
-        elapsed = now - self._last
-        if self._last and elapsed < self._min_interval:
-            self._sleep(self._min_interval - elapsed)
-        self._last = self._clock()
+        if self._last is not None:
+            wait_for = self._min_interval - (now - self._last)
+            if wait_for > 0:
+                self._sleep(wait_for)
+                now = now + wait_for
+        self._last = now
 
 
 class HttpxTransport:
