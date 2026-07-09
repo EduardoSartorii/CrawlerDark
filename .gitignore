@@ -112,6 +112,7 @@ ENV/
 env.bak/
 venv.bak/
 artifacts/
+threat_hunting/data/*.db
 
 # Spyder project settings
 .spyderproject
