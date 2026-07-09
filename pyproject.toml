@@ -1,0 +1,54 @@
+[tool.poetry]
+name = "threat-hunting"
+version = "0.1.0"
+description = "Modular corporate Cyber Threat Intelligence collection platform (Threat Hunting, OSINT, Dark Web, IOC, Brand/VIP monitoring)."
+authors = ["CTI Platform Team"]
+license = "GPL-3.0-or-later"
+readme = "README_PLATFORM.md"
+packages = [{ include = "threat_hunting" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pydantic = "^2.7"
+pydantic-settings = "^2.2"
+httpx = "^0.27"
+beautifulsoup4 = "^4.12"
+lxml = "^5.2"
+"SQLAlchemy" = "^2.0"
+structlog = "^24.1"
+typer = "^0.12"
+PyYAML = "^6.0"
+python-dateutil = "^2.9"
+dependency-injector = "^4.41"
+prometheus-client = "^0.20"
+
+[tool.poetry.group.integrations.dependencies]
+# Optional heavy integrations. Guarded behind try/except in the code so the
+# platform boots and tests run even when these are not installed.
+alembic = "^1.13"
+APScheduler = "^3.10"
+redis = "^5.0"
+pymisp = "^2.4"
+opentelemetry-api = "^1.25"
+opentelemetry-sdk = "^1.25"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2"
+pytest-cov = "^5.0"
+pytest-asyncio = "^0.23"
+
+[tool.poetry.scripts]
+hunt = "threat_hunting.cli.main:app"
+
+[build-system]
+requires = ["poetry-core>=1.8.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+source = ["threat_hunting"]
+omit = ["threat_hunting/cli/*", "*/__init__.py"]
