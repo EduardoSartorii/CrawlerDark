@@ -1,4 +1,3 @@
-[tool.poetry]
 # ---------------------------------------------------------------------------
 # Phishing Intelligence Platform
 # ---------------------------------------------------------------------------
@@ -11,39 +10,42 @@
 # pipeline is the primary flow and *collection* (fetching the HTML) is a
 # fallback secondary flow. See ``phishing_intel/main.py`` for the orchestrator.
 # ---------------------------------------------------------------------------
+[project]
 name = "phishing-intel"
 version = "1.0.0"
 description = "Professional CTI platform for phishing campaign analysis, correlation and MISP enrichment."
-authors = ["CTI Engineering <cti@example.com>"]
+authors = [{ name = "CTI Engineering", email = "cti@example.com" }]
 license = "GPL-3.0-or-later"
 readme = "README.md"
-packages = [{ include = "phishing_intel", from = ".." }]
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic (>=2.6,<3.0)",
+    "SQLAlchemy (>=2.0,<3.0)",
+    "alembic (>=1.13,<2.0)",
+    "pymisp (>=2.4)",
+    "requests (>=2.31,<3.0)",
+    "beautifulsoup4 (>=4.12,<5.0)",
+    "lxml (>=5.0)",
+    "cryptography (>=42.0)",
+    "dnspython (>=2.6,<3.0)",
+    "ipwhois (>=1.2,<2.0)",
+    "PyYAML (>=6.0,<7.0)",
+    "structlog (>=24.1)",
+]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-pydantic = "^2.6"
-SQLAlchemy = "^2.0"
-alembic = "^1.13"
-pymisp = "^2.4"
-requests = "^2.31"
-beautifulsoup4 = "^4.12"
-lxml = "^5.0"
-cryptography = "^42.0"
-dnspython = "^2.6"
-ipwhois = "^1.2"
-PyYAML = "^6.0"
-structlog = "^24.1"
+[project.scripts]
+phishing-intel = "phishing_intel.main:cli"
+
+[tool.poetry]
+packages = [{ include = "phishing_intel", from = ".." }]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0"
 pytest-cov = "^5.0"
 pytest-mock = "^3.12"
 
-[tool.poetry.scripts]
-phishing-intel = "phishing_intel.main:cli"
-
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]

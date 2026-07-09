@@ -23,6 +23,19 @@ from typing import Any
 import structlog
 
 
+class _DynamicStderrLoggerFactory:
+    """structlog logger factory that resolves ``sys.stderr`` on every call.
+
+    Binding a concrete stream (as ``PrintLoggerFactory(file=...)`` does) breaks
+    when the stream is later swapped or closed - e.g. under pytest output
+    capture. Resolving ``sys.stderr`` lazily keeps logging robust in all cases
+    while still directing logs to stderr (stdout stays reserved for the report).
+    """
+
+    def __call__(self, *args: Any) -> Any:
+        return structlog.PrintLogger(file=sys.stderr)
+
+
 def configure_logging(level: str = "INFO", fmt: str = "console") -> None:
     """Configure structlog + stdlib logging.
 
@@ -36,10 +49,11 @@ def configure_logging(level: str = "INFO", fmt: str = "console") -> None:
 
     numeric_level = getattr(logging, level.upper(), logging.INFO)
 
-    # Base stdlib configuration; structlog renders the final record.
+    # Base stdlib configuration; structlog renders the final record. Logs go to
+    # STDERR so STDOUT is reserved for the machine-readable JSON report.
     logging.basicConfig(
         format="%(message)s",
-        stream=sys.stdout,
+        stream=sys.stderr,
         level=numeric_level,
         force=True,
     )
@@ -62,8 +76,12 @@ def configure_logging(level: str = "INFO", fmt: str = "console") -> None:
     structlog.configure(
         processors=shared_processors + [renderer],
         wrapper_class=structlog.make_filtering_bound_logger(numeric_level),
-        logger_factory=structlog.PrintLoggerFactory(),
-        cache_logger_on_first_use=True,
+        # Emit to STDERR to keep STDOUT clean for the JSON report.
+        logger_factory=_DynamicStderrLoggerFactory(),
+        # Caching is disabled so the logger always resolves the *current*
+        # stderr stream. This keeps output correct when the stream is swapped
+        # at runtime (e.g. reconfiguration or test output capture).
+        cache_logger_on_first_use=False,
     )
 
 

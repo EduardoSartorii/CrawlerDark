@@ -64,9 +64,11 @@ _KEYWORD_PATTERNS: Dict[PhishingType, List[re.Pattern[str]]] = {
 
 # Regex identifying account-recovery / login-verification wording, which signals
 # an Account Takeover objective (as opposed to plain credential harvesting).
+# Patterns are stem-based (no trailing word boundary) so Portuguese inflections
+# such as "verifique"/"confirme"/"desbloquear" all match.
 _ATO_PATTERNS: List[re.Pattern[str]] = [
-    re.compile(r"\b(verify|verificar|confirm|confirmar|recover|recuperar)\b", re.I),
-    re.compile(r"\b(unlock|desbloquear|reactivate|reativar|update\s*account)\b", re.I),
+    re.compile(r"(verif|confirm|recover|recuper)", re.I),
+    re.compile(r"(unlock|desbloque|reactivat|reativ|update\s*account|atualiz)", re.I),
     re.compile(r"\b(account|conta)\b", re.I),
 ]
 
@@ -137,7 +139,15 @@ class FormClassifier:
             signals.extend(pwd_signals)
 
         # --- Account Takeover: credentials + recovery/verification wording --
-        page_blob = blob + " " + " ".join(dom.meta_tags.values()).lower()
+        # Cues can appear in field labels/placeholders (already in ``blob``),
+        # the page title and meta tags, so we search all three together.
+        page_blob = (
+            blob
+            + " "
+            + (dom.title or "").lower()
+            + " "
+            + " ".join(dom.meta_tags.values()).lower()
+        )
         ato_hits = sum(1 for p in _ATO_PATTERNS if p.search(page_blob))
         if PhishingType.CREDENTIAL_HARVESTING in detected and ato_hits >= 2:
             detected[PhishingType.ACCOUNT_TAKEOVER] = min(90, 30 + ato_hits * 20)
