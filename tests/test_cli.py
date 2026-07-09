@@ -46,3 +46,13 @@ def test_cli_export_json(test_config_path: object) -> None:
     assert run_result.exit_code == 0
     assert export_result.exit_code == 0
     assert "exported" in export_result.stdout
+
+
+def test_cli_run_all_scheduler_and_score(test_config_path: object) -> None:
+    """Validate all/scheduler/score command paths."""
+    run_all = runner.invoke(app, ["run", "all"])
+    scheduler = runner.invoke(app, ["scheduler", "run"])
+    score = runner.invoke(app, ["score", "test"])
+    assert run_all.exit_code == 0
+    assert scheduler.exit_code == 0
+    assert score.exit_code == 0

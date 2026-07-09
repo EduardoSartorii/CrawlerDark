@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from opentelemetry import trace
-from prometheus_client import Counter, Histogram
+from prometheus_client import CollectorRegistry, Counter, Histogram
 
 from threat_hunting.core.contracts import MetricsPort, SpanPort, TracerPort
 
@@ -14,17 +14,26 @@ class PrometheusMetrics(MetricsPort):
     """Metrics adapter with dynamic counter/histogram registry."""
 
     def __init__(self) -> None:
+        self._registry = CollectorRegistry(auto_describe=True)
         self._counters: dict[str, Counter] = {}
         self._histograms: dict[str, Histogram] = {}
 
     def increment(self, metric: str, value: int = 1) -> None:
         if metric not in self._counters:
-            self._counters[metric] = Counter(metric, f"Counter for {metric}")
+            self._counters[metric] = Counter(
+                metric,
+                f"Counter for {metric}",
+                registry=self._registry,
+            )
         self._counters[metric].inc(value)
 
     def observe(self, metric: str, value: float) -> None:
         if metric not in self._histograms:
-            self._histograms[metric] = Histogram(metric, f"Histogram for {metric}")
+            self._histograms[metric] = Histogram(
+                metric,
+                f"Histogram for {metric}",
+                registry=self._registry,
+            )
         self._histograms[metric].observe(value)
 
 

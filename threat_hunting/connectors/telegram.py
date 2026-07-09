@@ -29,7 +29,16 @@ class TelegramConnector(BaseConnector):
                 "category": "campaign_discovery",
                 "url": "https://telegram.local/channel/1",
                 "author": "intel-channel",
-            }
+            },
+            {
+                "origin_id": "telegram-2",
+                "title": "Follow-up infrastructure post",
+                "description": "Operator published admin@acme.com and acme.com mirror update.",
+                "source": "telegram",
+                "category": "ioc_hunting",
+                "url": "https://telegram.local/channel/2",
+                "author": "intel-channel",
+            },
         ]
 
     def health(self) -> bool:

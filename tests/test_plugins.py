@@ -23,3 +23,12 @@ def test_connector_factory_returns_concrete_connector(test_config_path: object) 
     factory = ConnectorFactory(registry)
     connector = factory.create("reddit")
     assert connector.name == "reddit"
+
+
+def test_registry_filters_disabled_connectors(test_config_path: object) -> None:
+    """Ensure disabled connectors are removed from discovered registry."""
+    container = AppContainer()
+    settings = container.settings()
+    settings.enabled_connectors["telegram"] = False
+    registry = build_registry(settings, container.connector_registry())
+    assert "telegram" not in registry.names()
