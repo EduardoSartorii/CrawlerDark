@@ -89,6 +89,10 @@ class Pipeline:
         """Execute the full pipeline for one connector and return a summary."""
         result = PipelineResult(connector=connector.name)
         context: list[Finding] = list(self._uow.findings.recent())
+        # Seed the deduplication index from persisted context so duplicates are
+        # detected across separate runs/processes, not just within one batch.
+        for prior in context:
+            self._deduplication.register(prior)
 
         try:
             await connector.connect()
