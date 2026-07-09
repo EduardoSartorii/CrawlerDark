@@ -1,0 +1,101 @@
+# =============================================================================
+# phishing_intel - Arquivo de configuracao central
+# =============================================================================
+# Este arquivo concentra todos os parametros operacionais da plataforma:
+# banco de dados, integracao MISP, timeouts de coleta, pesos do motor de
+# correlacao/atribuicao e perfis de navegador utilizados na comparacao
+# multi-perfil (desktop x mobile).
+#
+# Valores sensiveis (chaves de API, credenciais) NUNCA devem ser versionados
+# em texto plano em ambientes de producao. Prefira sobrescrever estes campos
+# via variaveis de ambiente (ver `config/settings.py` / `PhishingIntelSettings`).
+# =============================================================================
+
+database:
+  # URL de conexao SQLAlchemy. SQLite por padrao para facilitar avaliacao local.
+  url: "sqlite:///phishing_intel.db"
+  echo: false
+
+misp:
+  url: "https://misp.local"
+  api_key: "CHANGE-ME"
+  verify_cert: true
+  # UUID/ID do evento padrao usado quando nao ha correlacao com evento existente.
+  default_distribution: 0
+  default_threat_level_id: 2
+  default_analysis_level: 1
+
+collectors:
+  http_timeout_seconds: 15
+  max_redirects: 5
+  retry_attempts: 2
+  user_agent_default: "phishing-intel-cti/0.1 (+https://cti.local)"
+  # Perfis de renderizacao utilizados na comparacao multi-perfil.
+  render_profiles:
+    - name: "desktop_chrome"
+      user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+    - name: "desktop_edge"
+      user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0"
+    - name: "desktop_firefox"
+      user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0"
+    - name: "android_chrome"
+      user_agent: "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36"
+    - name: "iphone_safari"
+      user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1"
+
+correlation:
+  # Pesos utilizados pelo Attribution Score (0-100). Devem somar >= 100 quando
+  # todos os sinais coincidirem, permitindo saturar no teto de "alta confianca".
+  weights:
+    same_fingerprint: 35
+    same_certificate: 25
+    same_asn: 15
+    same_hosting_provider: 10
+    same_dom_pattern: 10
+    same_javascript_pattern: 10
+    same_target_brand: 10
+  thresholds:
+    low_confidence_max: 39
+    medium_confidence_max: 69
+    # >= 70 = alta confianca
+
+brands:
+  # Base minima de marcas conhecidas para o Brand Detector. Extensivel via
+  # arquivo externo ou API no futuro.
+  known_brands:
+    - name: "itau"
+      category: "financial_institution"
+      keywords: ["itau", "itaú", "personnalite", "uniclass"]
+      domains: ["itau.com.br"]
+    - name: "bradesco"
+      category: "financial_institution"
+      keywords: ["bradesco", "prime", "next"]
+      domains: ["bradesco.com.br"]
+    - name: "nubank"
+      category: "fintech"
+      keywords: ["nubank", "nu conta", "nuconta"]
+      domains: ["nubank.com.br"]
+    - name: "livelo"
+      category: "loyalty_program"
+      keywords: ["livelo", "pontos livelo"]
+      domains: ["livelo.com.br"]
+    - name: "smiles"
+      category: "loyalty_program"
+      keywords: ["smiles", "gol smiles"]
+      domains: ["smiles.com.br"]
+    - name: "mercado_livre"
+      category: "marketplace"
+      keywords: ["mercado livre", "mercadolivre", "mercado pago"]
+      domains: ["mercadolivre.com.br", "mercadopago.com.br"]
+    - name: "vivo"
+      category: "telecom"
+      keywords: ["vivo", "telefonica"]
+      domains: ["vivo.com.br"]
+    - name: "claro"
+      category: "telecom"
+      keywords: ["claro", "claro residencial"]
+      domains: ["claro.com.br"]
+
+logging:
+  level: "INFO"
+  json_format: true
