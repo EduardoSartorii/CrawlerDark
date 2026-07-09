@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "phishing-intel"
+version = "1.0.0"
+description = "Plataforma profissional de Cyber Threat Intelligence para análise, classificação, correlação, enriquecimento e atribuição de campanhas de phishing."
+authors = ["CTI Team <cti@example.com>"]
+readme = "README.md"
+license = "GPL-3.0-or-later"
+packages = [{ include = "phishing_intel", from = ".." }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pydantic = "^2.6"
+SQLAlchemy = "^2.0"
+alembic = "^1.13"
+pymisp = "^2.4"
+requests = "^2.31"
+beautifulsoup4 = "^4.12"
+lxml = "^5.1"
+cryptography = "^42.0"
+dnspython = "^2.6"
+ipwhois = "^1.2"
+PyYAML = "^6.0"
+structlog = "^24.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+pytest-cov = "^4.1"
+pytest-mock = "^3.12"
+
+[tool.poetry.scripts]
+phishing-intel = "phishing_intel.main:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=phishing_intel --cov-report=term-missing --cov-report=xml"
+
+[tool.coverage.run]
+omit = [
+    "*/tests/*",
+    "*/alembic/*",
+    "*/__init__.py",
+]

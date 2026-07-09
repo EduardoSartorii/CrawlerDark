@@ -1,0 +1,49 @@
+# =====================================================================
+# Configuração da plataforma phishing_intel
+# ---------------------------------------------------------------------
+# Segredos (MISP url/key, DATABASE_URL) devem, preferencialmente, ser
+# fornecidos via variáveis de ambiente. Os valores abaixo servem como
+# padrão seguro para ambientes de laboratório/desenvolvimento.
+# =====================================================================
+
+database:
+  # URL de conexão SQLAlchemy. Em produção, prefira PostgreSQL.
+  url: "sqlite:///phishing_intel.db"
+  echo: false
+
+misp:
+  # Mantido desabilitado por padrão: a plataforma deve funcionar sem MISP.
+  enabled: false
+  url: ""
+  key: ""
+  verify_ssl: true
+  distribution: 0
+  threat_level_id: 2
+  analysis: 0
+
+logging:
+  level: "INFO"
+  json: true
+
+evidence:
+  # Diretório de armazenamento de evidências (HTML/JS brutos).
+  storage_dir: "evidence"
+  store_artifacts: true
+
+correlation:
+  # Pesos do Attribution Score (fingerprint e certificado têm peso alto).
+  weight_fingerprint: 40.0
+  weight_certificate: 25.0
+  weight_asn: 15.0
+  weight_provider: 10.0
+  weight_brand: 10.0
+  # Limiares de confiança: 0-39 baixa, 40-69 média, 70-100 alta.
+  threshold_medium: 40
+  threshold_high: 70
+
+# Timeout de rede (segundos) para coletores.
+request_timeout: 20
+
+user_agent: >-
+  Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+  (KHTML, like Gecko) Chrome/124.0 Safari/537.36
