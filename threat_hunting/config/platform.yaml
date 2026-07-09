@@ -1,0 +1,49 @@
+database:
+  url: "sqlite+aiosqlite:///data/threat_hunting.db"
+  echo: false
+
+storage:
+  backend: "sqlite"
+  json_path: "data/findings"
+
+opsec:
+  default_profile: "default"
+  user_agent: "ThreatHuntingPlatform/1.0"
+  rate_limit_rps: 2.0
+  max_retries: 3
+
+export:
+  misp_url: ""
+  misp_api_key: ""
+  misp_event_id: ""
+  splunk_hec_url: ""
+  splunk_token: ""
+  elastic_url: ""
+  webhook_url: ""
+  auto_export_threshold: 70.0
+
+observability:
+  debug: false
+  metrics_port: 9090
+  tracing_enabled: true
+
+connectors:
+  reddit:
+    enabled: true
+    subreddits: ["cybersecurity", "netsec", "blueteamsec"]
+    schedule_cron: "0 */6 * * *"
+  github:
+    enabled: true
+    keywords: ["password", "api_key", "secret", "token"]
+    schedule_cron: "0 */4 * * *"
+  telegram:
+    enabled: true
+    channels: ["cybersec_intel"]
+  darkweb:
+    enabled: true
+    onion_urls: []
+    keywords: ["leak", "breach", "ransom"]
+  rss:
+    enabled: true
+    feeds:
+      - "https://feeds.feedburner.com/TheHackersNews"

@@ -1,0 +1,30 @@
+watchlists:
+  - watchlist_type: "keyword"
+    value: "confidential"
+    label: "Confidential data marker"
+    enabled: true
+
+  - watchlist_type: "keyword"
+    value: "internal only"
+    label: "Internal document marker"
+    enabled: true
+
+  - watchlist_type: "brand"
+    value: "example-corp"
+    label: "Example Corporation"
+    enabled: true
+
+  - watchlist_type: "domain"
+    value: "example.com"
+    label: "Primary domain"
+    enabled: true
+
+  - watchlist_type: "threat_actor"
+    value: "lockbit"
+    label: "LockBit ransomware group"
+    enabled: true
+
+  - watchlist_type: "vip"
+    value: "ceo@example.com"
+    label: "CEO Email"
+    enabled: true

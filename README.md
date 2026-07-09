@@ -1,105 +1,94 @@
-# Crawler News
+# Threat Hunting Collection Platform
 
-[![N|Solid](https://uploaddeimagens.com.br/images/003/091/892/original/dark.png)](https://nodesource.com/products/nsolid)
+Corporate-grade **Threat Hunting Collection Platform** for automated threat discovery, leak hunting, IOC collection, brand monitoring, VIP monitoring, and Dark Web intelligence.
 
-Busca de vazamentos na Dark Web
+## Architecture
 
-  - Busca em onion de Threat actor
-  - Adiciona informação no MISP
+Built on **Clean Architecture**, **DDD**, **Hexagonal Architecture**, and **Event-Driven Design**.
 
-# New Features!
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for full architectural documentation.
 
-  - Captura de tela do vazamento
- 
+## Features
 
+- Threat Hunting, OSINT, Brand/VIP Monitoring
+- Dark Web & Deep Web Monitoring
+- Credential, IOC, Card, Document & Leak Hunting
+- Campaign & Threat Actor Discovery
+- Detection Engine (Regex, YARA, Sigma, Keywords, IOC, Heuristics)
+- Configurable Scoring, Correlation & Deduplication
+- Enrichment via VirusTotal, GreyNoise, AbuseIPDB, Shodan, etc.
+- Export to MISP, OpenCTI, Splunk, Elastic, STIX/TAXII
+- OPSEC layer (proxies, rate limiting, credentials)
+- Pluggable connectors with auto-discovery
+- Structured logging (structlog), Prometheus metrics, OpenTelemetry tracing
 
-### Trheat Actors monitorados
+## Quick Start
 
-- Egregor
-- Ragnar
-- Avaddon
-- Darkside
-- Dopple
-- Ransomexx
-- Ranzyleak
+```bash
+# Install dependencies
+poetry install
 
+# Run a connector
+poetry run hunt run reddit
 
-### 🔧 Configurando o TOR
+# Run connector group
+poetry run hunt run social
+poetry run hunt run darkweb
 
-Precisamos configurar o tor para podermos utilizar o proxy ao realizar o scraping, neste caso eu utilizei o ubuntu.
+# Run all connectors
+poetry run hunt run all
 
-Instalando o TOR:
-```
-sudo apt update
-sudo apt install torbrowser-launcher
-```
+# Manage connectors
+poetry run hunt connector list
+poetry run hunt connector enable reddit
+poetry run hunt connector disable reddit
 
-Vamos criar um arquivo chamado tor_port_0:
-```
-SOCKSPort 9050
-ControlPort 9051
-DataDirectory *Escolha um diretorio para salvar exemplo: /usr/etc/tor*
-```
+# Export findings
+poetry run hunt export misp
+poetry run hunt export splunk
+poetry run hunt export elastic
+poetry run hunt export json
 
-Execute o comando para dar inicio ao nó:
+# Test scoring
+poetry run hunt score test
 
-```
-tor -f tor_port_0
-```
-### 🔧 Instalando o requirements.txt
+# Start scheduler
+poetry run hunt scheduler run
 
-```
-pip3 install -r requirements.txt
-```
-### ⚙️ Configurando o framework do MISP em frameworks/mispadd.py
-
-Na linha 5 e 6 do código devemos adicionar a chave de autenticação da API do MISP e a url de comunicação com o MISP:
-
-```
-self.key_misp = 'CHAVE-DO-MISP'
-self.url_misp = "URL-DO-MISP"
-```
-Na linha 20 devemos adicionar o número do evento ao qual iremos adicionar os atributos.
-
-```
-self.misp.add_object('EVENT-ID', self.misp_object)
+# Health check
+poetry run hunt health
 ```
 
-## ⚙️ Executando o script
-
-Para executar o script bastar passar o parametro -f onion como abaixo:
+## Project Structure
 
 ```
-python3 main.py -f onion
+threat_hunting/
+├── core/           # Domain, application, contracts (ports)
+├── infrastructure/ # Connectors, engines, storage, exporters
+├── cli/            # Typer CLI
+├── config/         # YAML configuration
+├── api/            # Future REST API
+├── web/            # Future Django admin
+└── tests/          # Unit & integration tests
 ```
 
-### 🔩 Logs e Screenshots
+## Connectors
 
-Todo arquivo de log gerado sera salvo com a extensão *.json:
+Reddit, Facebook, Instagram, X, Telegram, Discord, GitHub, GitLab, RSS, Blogs, Sites, Paste Sites, News, Dark Web, Deep Web, Forums, Marketplaces, Feeds, APIs, MISP, OpenCTI, ThreatFox, GreyNoise, VirusTotal, AbuseIPDB, Shodan, Censys, URLHaus, AlienVault OTX.
 
-```
-utils/log
-```
-Toda screenshot será salva e enviada para o misp pelo diretorio:
+## Pipeline
 
 ```
-utils/screenshot
+Connector → Parser → Extractor → Normalizer → Detection → Scoring →
+Correlation → Deduplication → Enrichment → Persistence → Export
 ```
 
+## Tests
 
-### Tech
+```bash
+poetry run pytest --cov=threat_hunting --cov-fail-under=90
+```
 
-Linguagens utilizadas:
+## License
 
-* [TOR] - Browser keep identity secure
-* [Python] - evented I/O for the backend
-
-## ✒️ Autores
-
-* **Eduardo Sartori** - *Desenvolvimento* - [EduardoSartorii](https://github.com/EduardoSartorii/)
-
-## 📄 Licença
-
-Este projeto está sob a licença (GNU GENERAL PUBLIC LICENSE) - veja o arquivo [LICENSE.md](https://github.com/EduardoSartorii/CrawlerDark/blob/main/LICENSE) para detalhes.
-
-⌨️ com ❤️ por [Eduaro Sartori](https://github.com/EduardoSartorii/) 😊
+GPL-3.0-or-later

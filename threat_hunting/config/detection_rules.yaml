@@ -1,0 +1,43 @@
+rules:
+  - name: "credential_leak_keyword"
+    rule_type: "keyword"
+    pattern: "password leak"
+    severity: "high"
+    category: "credential_leak"
+    enabled: true
+
+  - name: "card_data_pattern"
+    rule_type: "regex"
+    pattern: "\\b(?:\\d{4}[- ]?){3}\\d{4}\\b"
+    severity: "critical"
+    category: "card_leak"
+    enabled: true
+
+  - name: "ransomware_keyword"
+    rule_type: "keyword"
+    pattern: "ransomware"
+    severity: "high"
+    category: "malware"
+    enabled: true
+
+  - name: "data_breach_keyword"
+    rule_type: "keyword"
+    pattern: "data breach"
+    severity: "high"
+    category: "credential_leak"
+    enabled: true
+
+  - name: "min_ioc_heuristic"
+    rule_type: "heuristic"
+    pattern: ""
+    severity: "medium"
+    metadata:
+      min_indicators: 3
+    enabled: true
+
+  - name: "phishing_keyword"
+    rule_type: "keyword"
+    pattern: "phishing"
+    severity: "medium"
+    category: "phishing"
+    enabled: true

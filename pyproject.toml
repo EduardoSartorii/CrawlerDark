@@ -1,0 +1,70 @@
+[tool.poetry]
+name = "threat-hunting-platform"
+version = "1.0.0"
+description = "Corporate Threat Hunting Collection Platform — OSINT, Dark Web, IOC Hunting, Brand & VIP Monitoring"
+authors = ["Threat Hunting Team <security@example.com>"]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+packages = [{ include = "threat_hunting" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pydantic = "^2.10"
+pydantic-settings = "^2.7"
+sqlalchemy = "^2.0"
+alembic = "^1.14"
+httpx = "^0.28"
+beautifulsoup4 = "^4.12"
+lxml = "^5.3"
+pymisp = "^2.5"
+redis = "^5.2"
+apscheduler = "^3.10"
+structlog = "^24.4"
+pyyaml = "^6.0"
+typer = { version = "^0.15", extras = ["all"] }
+dependency-injector = "^4.43"
+opentelemetry-api = "^1.29"
+opentelemetry-sdk = "^1.29"
+opentelemetry-instrumentation-httpx = "^0.50b0"
+prometheus-client = "^0.21"
+aiosqlite = "^0.20"
+greenlet = "^3.1"
+feedparser = "^6.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3"
+pytest-asyncio = "^0.25"
+pytest-cov = "^6.0"
+pytest-mock = "^3.14"
+mypy = "^1.14"
+ruff = "^0.9"
+
+[tool.poetry.scripts]
+hunt = "threat_hunting.cli.main:app"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["threat_hunting/tests"]
+addopts = "-v --cov=threat_hunting --cov-report=term-missing --cov-fail-under=90"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+
+[tool.coverage.run]
+omit = ["threat_hunting/tests/*"]
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
