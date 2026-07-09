@@ -1,0 +1,35 @@
+# Default detection rules (loaded dynamically; nothing is hardcoded).
+# Each rule has a kind, an id and a weight consumed by the scoring engine.
+rules:
+  - id: leak-keywords
+    kind: keyword
+    weight: 15.0
+    terms: ["leak", "database", "dump", "breach", "combolist", "vazamento"]
+
+  - id: credential-pattern
+    kind: regex
+    weight: 20.0
+    pattern: "[A-Za-z0-9._%+-]+(@[A-Za-z0-9.-]+)?:[^\\s:]{3,}"
+
+  - id: ransomware-actors
+    kind: actor
+    weight: 30.0
+    names: ["LockBit", "LockBit3", "ALPHV", "BlackCat", "Cl0p", "Egregor", "Ragnar"]
+
+  - id: ioc-presence
+    kind: ioc
+    weight: 10.0
+
+  - id: sigma-suspicious-download
+    kind: sigma
+    weight: 12.0
+    keywords: ["powershell -enc", "certutil -urlcache", "bitsadmin /transfer"]
+
+  - id: composite-high-risk-leak
+    kind: composite
+    weight: 25.0
+    operator: and
+    rules:
+      - kind: keyword
+        terms: ["leak", "dump"]
+      - kind: ioc

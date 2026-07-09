@@ -1,0 +1,56 @@
+[
+  {
+    "info": "Paste containing credit card and wallet",
+    "threat_level_id": 2,
+    "analysis": 1,
+    "Attribute": [
+      {
+        "type": "url",
+        "value": "http://acme-corp-login.example.com/verify",
+        "to_ids": true,
+        "comment": "from sample (score 100.0)"
+      },
+      {
+        "type": "btc",
+        "value": "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
+        "to_ids": true,
+        "comment": "from sample (score 100.0)"
+      },
+      {
+        "type": "domain",
+        "value": "acme-corp-login.example.com",
+        "to_ids": true,
+        "comment": "from sample (score 100.0)"
+      }
+    ],
+    "Tag": [
+      {
+        "name": "rule:leak-keywords"
+      },
+      {
+        "name": "rule:credential-pattern"
+      },
+      {
+        "name": "rule:ioc-presence"
+      },
+      {
+        "name": "rule:composite-high-risk-leak"
+      },
+      {
+        "name": "kw:acme-corp"
+      },
+      {
+        "name": "brand:ACME Corp"
+      },
+      {
+        "name": "br-fraud"
+      },
+      {
+        "name": "carding"
+      },
+      {
+        "name": "crypto"
+      }
+    ]
+  }
+]

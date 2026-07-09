@@ -1,0 +1,89 @@
+# Threat Hunting Collection Platform - main configuration.
+# Environment variables prefixed with TH_ override these values.
+
+detection_threshold: 0.0
+dedup_similarity_threshold: 0.9
+
+# OPSEC transport profiles (proxies, User-Agents, rate limiting, retries).
+opsec_profiles:
+  default:
+    user_agent: "Mozilla/5.0 (compatible; ThreatHuntingCollector/1.0)"
+    timeout_seconds: 30.0
+    max_retries: 3
+    backoff_factor: 0.5
+    rate_limit_per_second: 2.0
+    verify_tls: true
+  darkweb:
+    # Route dark-web collection through Tor's SOCKS5 proxy.
+    socks5_proxy: "socks5://127.0.0.1:9050"
+    user_agent: "Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101 Firefox/102.0"
+    timeout_seconds: 60.0
+    rate_limit_per_second: 0.5
+    verify_tls: false
+
+# Per-connector configuration (enable/disable, OPSEC profile, options).
+connectors:
+  sample:
+    enabled: true
+    opsec_profile: default
+  rss:
+    enabled: true
+    opsec_profile: default
+    options:
+      feeds:
+        - "https://feeds.feedburner.com/TheHackersNews"
+        - "https://www.bleepingcomputer.com/feed/"
+  threatfox:
+    enabled: true
+    opsec_profile: default
+    options:
+      days: 1
+  static_file:
+    enabled: false
+    opsec_profile: default
+    options:
+      paths: []
+
+# Configurable scoring weights (fully explainable scoring engine).
+scoring:
+  regex_match: 10.0
+  yara_match: 25.0
+  keyword_match: 10.0
+  vip_match: 25.0
+  ioc_match: 15.0
+  credential: 20.0
+  credit_card: 30.0
+  email: 5.0
+  cpf: 20.0
+  cnpj: 20.0
+  domain: 5.0
+  threat_actor: 30.0
+  source_reputation: 5.0
+  context: 5.0
+  ioc_volume: 2.0
+  recurrence: 5.0
+  history: 5.0
+  per_indicator_cap: 40.0
+
+storage:
+  backend: sqlite            # sqlite | postgresql | json | memory
+  dsn: "sqlite:///threat_hunting.db"
+  json_path: "findings.jsonl"
+
+export:
+  output_dir: exports
+  auto_export_threshold: 80.0
+  auto_export_targets: ["misp"]
+  misp_url: null
+  misp_key: null
+  misp_event_id: null
+
+observability:
+  log_level: INFO
+  json_logs: true
+  metrics_enabled: true
+  metrics_port: 9464
+  tracing_enabled: false
+
+rules_dir: config/rules
+watchlists_path: config/watchlists.yml

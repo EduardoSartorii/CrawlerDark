@@ -1,0 +1,173 @@
+{
+  "type": "bundle",
+  "id": "bundle--3b343077-e603-4ee3-8bda-c63a73c961ef",
+  "objects": [
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--655e2a67-a367-449f-abcc-2ff26ff316b9",
+      "created": "2026-07-09T22:42:00.900567Z",
+      "modified": "2026-07-09T22:42:00.900567Z",
+      "name": "url: http://acme-corp-login.example.com/verify",
+      "pattern": "[url:value = 'http://acme-corp-login.example.com/verify']",
+      "pattern_type": "stix",
+      "valid_from": "2026-07-09T22:42:00.900567Z",
+      "confidence": 100,
+      "labels": [
+        "malicious-activity"
+      ]
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--71f3302b-3edf-4ca3-95a6-055e445829ef",
+      "created": "2026-07-09T22:42:00.900567Z",
+      "modified": "2026-07-09T22:42:00.900567Z",
+      "name": "domain: acme-corp-login.example.com",
+      "pattern": "[domain-name:value = 'acme-corp-login.example.com']",
+      "pattern_type": "stix",
+      "valid_from": "2026-07-09T22:42:00.900567Z",
+      "confidence": 100,
+      "labels": [
+        "malicious-activity"
+      ]
+    },
+    {
+      "type": "report",
+      "spec_version": "2.1",
+      "id": "report--f8941399-8c87-4cc0-909c-b01ad32c1858",
+      "created": "2026-07-09T22:42:00.900567Z",
+      "modified": "2026-07-09T22:42:00.900567Z",
+      "name": "Paste containing credit card and wallet",
+      "description": "Paste containing credit card and wallet\ndump: card 4111 1111 1111 1111 exp 12/27; btc wallet 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa; CNPJ 11.222.333/0001-81; phishing kit at http://acme-corp-login.example.com/verify . CVE-2024-3094 referenced.",
+      "report_types": [
+        "threat-report"
+      ],
+      "confidence": 100,
+      "labels": [
+        "rule:leak-keywords",
+        "rule:credential-pattern",
+        "rule:ioc-presence",
+        "rule:composite-high-risk-leak",
+        "kw:acme-corp",
+        "brand:ACME Corp",
+        "br-fraud",
+        "carding",
+        "crypto"
+      ],
+      "object_refs": [
+        "indicator--655e2a67-a367-449f-abcc-2ff26ff316b9",
+        "indicator--71f3302b-3edf-4ca3-95a6-055e445829ef"
+      ]
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--0160e183-5e46-4dc7-b68a-9d1de198d3d2",
+      "created": "2026-07-09T22:42:00.900622Z",
+      "modified": "2026-07-09T22:42:00.900622Z",
+      "name": "email: john.doe@acme-corp.com",
+      "pattern": "[email-addr:value = 'john.doe@acme-corp.com']",
+      "pattern_type": "stix",
+      "valid_from": "2026-07-09T22:42:00.900622Z",
+      "confidence": 100,
+      "labels": [
+        "malicious-activity"
+      ]
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--d6dda37f-f32c-4bb4-8dc7-7c8d526b4fbb",
+      "created": "2026-07-09T22:42:00.900622Z",
+      "modified": "2026-07-09T22:42:00.900622Z",
+      "name": "email: admin@acme-corp.com",
+      "pattern": "[email-addr:value = 'admin@acme-corp.com']",
+      "pattern_type": "stix",
+      "valid_from": "2026-07-09T22:42:00.900622Z",
+      "confidence": 100,
+      "labels": [
+        "malicious-activity"
+      ]
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--3c6b82d5-ea22-4bed-89f8-7c302e137918",
+      "created": "2026-07-09T22:42:00.900622Z",
+      "modified": "2026-07-09T22:42:00.900622Z",
+      "name": "md5: 44d88612fea8a8f36de82e1278abb02f",
+      "pattern": "[file:hashes.MD5 = '44d88612fea8a8f36de82e1278abb02f']",
+      "pattern_type": "stix",
+      "valid_from": "2026-07-09T22:42:00.900622Z",
+      "confidence": 100,
+      "labels": [
+        "malicious-activity"
+      ]
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--7e5fcbb3-634c-4bae-ab15-4c54d256e17c",
+      "created": "2026-07-09T22:42:00.900622Z",
+      "modified": "2026-07-09T22:42:00.900622Z",
+      "name": "ipv4: 185.220.101.45",
+      "pattern": "[ipv4-addr:value = '185.220.101.45']",
+      "pattern_type": "stix",
+      "valid_from": "2026-07-09T22:42:00.900622Z",
+      "confidence": 100,
+      "labels": [
+        "malicious-activity"
+      ]
+    },
+    {
+      "type": "indicator",
+      "spec_version": "2.1",
+      "id": "indicator--1652a8b0-2821-47c6-909d-0632382b393b",
+      "created": "2026-07-09T22:42:00.900622Z",
+      "modified": "2026-07-09T22:42:00.900622Z",
+      "name": "domain: acme-corp.com",
+      "pattern": "[domain-name:value = 'acme-corp.com']",
+      "pattern_type": "stix",
+      "valid_from": "2026-07-09T22:42:00.900622Z",
+      "confidence": 100,
+      "labels": [
+        "malicious-activity"
+      ]
+    },
+    {
+      "type": "report",
+      "spec_version": "2.1",
+      "id": "report--2e1c366b-b246-4b8e-a8e3-4ca0aae4d13a",
+      "created": "2026-07-09T22:42:00.900622Z",
+      "modified": "2026-07-09T22:42:00.900622Z",
+      "name": "Alleged database leak mentioning ACME Corp executives",
+      "description": "Alleged database leak mentioning ACME Corp executives\nA user on a dark web forum is selling a database allegedly belonging to ACME Corp. Sample records include john.doe@acme-corp.com:Password123 and admin@acme-corp.com:hunter2. Contact the actor LockBit3 on telegram @acme_leaks. Malicious C2 at 185.220.101.45 and payload hash 44d88612fea8a8f36de82e1278abb02f. CPF 529.982.247-25 exposed.",
+      "report_types": [
+        "threat-report"
+      ],
+      "confidence": 100,
+      "labels": [
+        "rule:leak-keywords",
+        "rule:credential-pattern",
+        "rule:ransomware-actors",
+        "rule:ioc-presence",
+        "rule:composite-high-risk-leak",
+        "kw:acme-corp",
+        "kw:acme corp",
+        "vip:John Doe",
+        "brand:ACME Corp",
+        "actor:LockBit3",
+        "br-fraud",
+        "credentials"
+      ],
+      "object_refs": [
+        "indicator--0160e183-5e46-4dc7-b68a-9d1de198d3d2",
+        "indicator--d6dda37f-f32c-4bb4-8dc7-7c8d526b4fbb",
+        "indicator--3c6b82d5-ea22-4bed-89f8-7c302e137918",
+        "indicator--7e5fcbb3-634c-4bae-ab15-4c54d256e17c",
+        "indicator--1652a8b0-2821-47c6-909d-0632382b393b"
+      ]
+    }
+  ]
+}

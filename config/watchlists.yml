@@ -1,0 +1,27 @@
+# Hunting targets: keywords, VIPs, brands, threat actors, campaigns.
+# Managed here today; a future Django admin will edit the same structure.
+watchlists:
+  - name: corporate-brand-and-vips
+    category: brand_monitoring
+    base_weight: 1.0
+    keywords:
+      - term: "acme-corp"
+        weight: 20.0
+      - term: "acme corp"
+        weight: 15.0
+    brands:
+      - name: "ACME Corp"
+        domains: ["acme-corp.com"]
+        keywords: ["acme"]
+        weight: 20.0
+    vips:
+      - name: "John Doe"
+        role: "CEO"
+        organization: "ACME Corp"
+        emails: ["john.doe@acme-corp.com"]
+        weight: 25.0
+    actors:
+      - name: "LockBit3"
+        aliases: ["lockbit", "lockbit 3.0"]
+        weight: 30.0
+    campaigns: []

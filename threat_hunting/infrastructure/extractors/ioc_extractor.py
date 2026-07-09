@@ -46,13 +46,15 @@ _PATTERNS: dict[IndicatorType, re.Pattern[str]] = {
     IndicatorType.CPF: re.compile(r"\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b"),
     IndicatorType.CNPJ: re.compile(r"\b\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2}\b"),
     IndicatorType.CREDIT_CARD: re.compile(r"\b(?:\d[ -]?){13,19}\b"),
-    IndicatorType.TELEGRAM: re.compile(r"(?:t\.me/|telegram[:\s]+@?|@)([A-Za-z0-9_]{4,32})"),
+    IndicatorType.TELEGRAM: re.compile(
+        r"(?:t\.me/|telegram[:\s]+@?|(?<![\w@.])@)([A-Za-z0-9_]{4,32})", re.IGNORECASE
+    ),
     IndicatorType.DOMAIN: re.compile(
         r"\b(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+"
         r"(?:com|net|org|io|gov|edu|br|onion|ru|info|biz|xyz|top|shop)\b"
     ),
     IndicatorType.CREDENTIAL: re.compile(
-        r"\b([A-Za-z0-9._%+\-]+(?:@[A-Za-z0-9.\-]+\.[A-Za-z]{2,})?):([^\s:]{3,})\b"
+        r"\b([A-Za-z0-9._%+\-]+(?:@[A-Za-z0-9.\-]+\.[A-Za-z]{2,})?):(?!//)([^\s:/]{3,})\b"
     ),
 }
 
@@ -82,8 +84,8 @@ class RegexIOCExtractor(ExtractorPort):
 
     def _build(self, ioc_type: IndicatorType, match: re.Match[str]) -> Indicator:
         """Build an indicator, preferring a capture group when present."""
-        if ioc_type in (IndicatorType.TELEGRAM, IndicatorType.CREDENTIAL):
-            value = match.group(0).strip()
+        if ioc_type is IndicatorType.TELEGRAM:
+            value = f"@{match.group(1).strip()}"
         else:
             value = match.group(0).strip()
         return Indicator(type=ioc_type, value=value)
