@@ -1,0 +1,1 @@
+"""Subcomandos da CLI ``hunt``."""
