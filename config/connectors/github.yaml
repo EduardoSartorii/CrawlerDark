@@ -1,0 +1,7 @@
+name: github
+enabled: true
+opsec_profile: default
+schedule: "30 */4 * * *"
+options:
+  query: "password OR api_key OR aws_secret"
+  endpoint: null

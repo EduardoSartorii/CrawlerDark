@@ -135,3 +135,12 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+# Platform runtime
+exports/
+data/
+*.db
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/

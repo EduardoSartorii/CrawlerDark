@@ -1,0 +1,28 @@
+# Threat Hunting Collection Platform — root settings
+# Environment overrides: THREAT_HUNTING_<FIELD> / THREAT_HUNTING_<NESTED>__<FIELD>
+
+app_name: "Threat Hunting Collection Platform"
+
+storage:
+  backend: memory  # memory | sqlite | postgresql
+  database_url: "sqlite+aiosqlite:///./data/threat_hunting.db"
+
+misp:
+  url: null
+  key: null
+  auto_export_threshold: 75.0
+
+observability:
+  json_logs: false
+  log_level: INFO
+  otel_console: false
+  metrics_enabled: true
+
+scheduler:
+  enabled: true
+  timezone: UTC
+
+score_export_threshold: 75.0
+
+# Empty list = all discovered connectors enabled
+enabled_connectors: []

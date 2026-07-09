@@ -1,0 +1,14 @@
+name: darkweb
+enabled: true
+opsec_profile: darkweb
+schedule: "0 */12 * * *"
+options:
+  onion_urls: []
+  # Legacy CrawlerDark actors can be migrated here
+  threat_actors:
+    - egregor
+    - ragnar
+    - avaddon
+    - darkside
+    - ransomexx
+    - ranzyleak

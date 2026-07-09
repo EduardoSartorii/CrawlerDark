@@ -1,0 +1,137 @@
+# Detection rules — loaded dynamically. NO hardcoded rules in Python.
+
+rules:
+  - id: regex_credential_leak
+    type: regex
+    enabled: true
+    pattern: "(?i)(password|passwd|pwd)\\s*[:=]\\s*\\S+"
+    severity: high
+    score_delta: 15.0
+
+  - id: regex_email
+    type: regex
+    enabled: true
+    pattern: "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
+    severity: medium
+    score_delta: 5.0
+
+  - id: keyword_leak_dump
+    type: keyword
+    enabled: true
+    keywords:
+      - leak
+      - dump
+      - breach
+      - ransomware
+      - stealer
+      - combo list
+    severity: medium
+    score_delta: 5.0
+
+  - id: keyword_vip
+    type: keyword
+    enabled: true
+    keywords:
+      - ceo
+      - cfo
+      - executive
+      - vip
+    severity: high
+    score_delta: 10.0
+
+  - id: ioc_known_bad
+    type: ioc_match
+    enabled: true
+    iocs:
+      - 203.0.113.10
+      - evil-demo.example
+      - malware.example
+    severity: high
+    score_delta: 20.0
+
+  - id: threat_actor_known
+    type: threat_actor_match
+    enabled: true
+    actors:
+      - lockbit
+      - clop
+      - alphv
+      - blackcat
+      - egregor
+      - ragnar
+      - darkside
+      - ransomexx
+    severity: critical
+    score_delta: 25.0
+
+  - id: heuristic_leak_signals
+    type: heuristic
+    enabled: true
+    signals:
+      - password
+      - leak
+      - dump
+      - credential
+      - cvv
+      - stealer
+    min_signals: 2
+    severity: medium
+    score_delta: 8.0
+
+  - id: blacklist_critical_terms
+    type: blacklist
+    enabled: true
+    entries:
+      - zero-day exploit sale
+      - fullz for sale
+      - access for sale
+    severity: critical
+    score_delta: 30.0
+
+  - id: whitelist_noise
+    type: whitelist
+    enabled: true
+    entries:
+      - example.com
+      - lorem ipsum
+    score_delta: 15.0
+
+  - id: threshold_multi_ioc
+    type: threshold
+    enabled: true
+    min_indicators: 2
+    severity: medium
+    score_delta: 10.0
+
+  - id: yara_stealer_strings
+    type: yara
+    enabled: true
+    strings:
+      - stealer
+      - redline
+      - racoon
+      - vidar
+    severity: high
+    score_delta: 18.0
+
+  - id: sigma_credential_access
+    type: sigma
+    enabled: true
+    detection:
+      selection:
+        keywords:
+          - credential dump
+          - lsass
+          - mimikatz
+    severity: high
+    score_delta: 12.0
+
+  - id: composite_high_risk_leak
+    type: composite
+    enabled: true
+    mode: all
+    require_rules:
+      - keyword_leak_dump
+      - regex_email
+    severity: high
+    score_delta: 15.0

@@ -1,0 +1,104 @@
+# Threat Hunting Collection Platform
+# Corporate CTI / Threat Hunting / OSINT / Brand & Dark Web Monitoring
+# See docs/ARCHITECTURE.md for full architectural decisions.
+
+[tool.poetry]
+name = "threat-hunting"
+version = "1.0.0"
+description = "Enterprise Threat Hunting Collection Platform — OSINT, Dark Web, IOC, Brand & VIP Monitoring"
+authors = ["Threat Hunting Platform Team"]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+packages = [{ include = "threat_hunting" }]
+keywords = ["threat-hunting", "cti", "osint", "darkweb", "ioc", "misp"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pydantic = "^2.10"
+pydantic-settings = "^2.7"
+sqlalchemy = { version = "^2.0", extras = ["asyncio"] }
+alembic = "^1.14"
+httpx = { version = "^0.28", extras = ["socks"] }
+beautifulsoup4 = "^4.12"
+lxml = "^5.3"
+pymisp = "^2.5"
+redis = "^5.2"
+apscheduler = "^3.10"
+structlog = "^24.4"
+pyyaml = "^6.0"
+typer = { version = "^0.15", extras = ["all"] }
+dependency-injector = "^4.43"
+opentelemetry-api = "^1.29"
+opentelemetry-sdk = "^1.29"
+opentelemetry-instrumentation = "^0.50b0"
+prometheus-client = "^0.21"
+aiosqlite = "^0.20"
+greenlet = "^3.1"
+python-dateutil = "^2.9"
+tenacity = "^9.0"
+orjson = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3"
+pytest-asyncio = "^0.25"
+pytest-cov = "^6.0"
+pytest-mock = "^3.14"
+httpx = { version = "^0.28", extras = ["socks"] }
+ruff = "^0.8"
+mypy = "^1.14"
+factory-boy = "^3.3"
+freezegun = "^1.5"
+respx = "^0.22"
+
+[tool.poetry.scripts]
+hunt = "threat_hunting.cli.app:app"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-q --cov=threat_hunting --cov-report=term-missing --cov-fail-under=90"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+branch = true
+source = ["threat_hunting"]
+omit = [
+  "threat_hunting/web/*",
+  "threat_hunting/api/*",
+  "threat_hunting/database/*",
+  "threat_hunting/cli/app.py",
+  "threat_hunting/connectors/social/*",
+  "threat_hunting/connectors/code/*",
+  "threat_hunting/connectors/web/*",
+  "threat_hunting/connectors/darkweb/*",
+  "threat_hunting/connectors/feeds/*",
+  "threat_hunting/connectors/threat_intel/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "if TYPE_CHECKING:",
+  "raise NotImplementedError",
+  "\\.\\.\\.",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM", "ASYNC"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true

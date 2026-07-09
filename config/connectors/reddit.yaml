@@ -1,0 +1,9 @@
+name: reddit
+enabled: true
+opsec_profile: social
+schedule: "0 */6 * * *"
+options:
+  subreddits:
+    - netsec
+    - cybersecurity
+  query: "leak OR breach OR dump"

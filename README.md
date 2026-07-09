@@ -1,105 +1,99 @@
-# Crawler News
+# Threat Hunting Collection Platform
 
-[![N|Solid](https://uploaddeimagens.com.br/images/003/091/892/original/dark.png)](https://nodesource.com/products/nsolid)
+Enterprise modular platform for **Threat Hunting**, **OSINT**, **Brand/VIP Monitoring**,
+**Dark/Deep Web**, **IOC/Credential/Card/Leak Hunting**, correlation, scoring and export.
 
-Busca de vazamentos na Dark Web
+> Architecture documentation: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 
-  - Busca em onion de Threat actor
-  - Adiciona informação no MISP
+## Stack
 
-# New Features!
+Python 3.12 · Poetry · Pydantic V2 · SQLAlchemy 2 · Alembic · httpx · BeautifulSoup4 · lxml ·
+PyMISP · Redis · APScheduler · structlog · PyYAML · pytest · Typer · Dependency Injector ·
+OpenTelemetry · Prometheus Client
 
-  - Captura de tela do vazamento
- 
+## Architecture
 
-
-### Trheat Actors monitorados
-
-- Egregor
-- Ragnar
-- Avaddon
-- Darkside
-- Dopple
-- Ransomexx
-- Ranzyleak
-
-
-### 🔧 Configurando o TOR
-
-Precisamos configurar o tor para podermos utilizar o proxy ao realizar o scraping, neste caso eu utilizei o ubuntu.
-
-Instalando o TOR:
-```
-sudo apt update
-sudo apt install torbrowser-launcher
-```
-
-Vamos criar um arquivo chamado tor_port_0:
-```
-SOCKSPort 9050
-ControlPort 9051
-DataDirectory *Escolha um diretorio para salvar exemplo: /usr/etc/tor*
-```
-
-Execute o comando para dar inicio ao nó:
+Clean Architecture + DDD + Hexagonal + Event-Driven. Core never depends on infrastructure.
 
 ```
-tor -f tor_port_0
-```
-### 🔧 Instalando o requirements.txt
-
-```
-pip3 install -r requirements.txt
-```
-### ⚙️ Configurando o framework do MISP em frameworks/mispadd.py
-
-Na linha 5 e 6 do código devemos adicionar a chave de autenticação da API do MISP e a url de comunicação com o MISP:
-
-```
-self.key_misp = 'CHAVE-DO-MISP'
-self.url_misp = "URL-DO-MISP"
-```
-Na linha 20 devemos adicionar o número do evento ao qual iremos adicionar os atributos.
-
-```
-self.misp.add_object('EVENT-ID', self.misp_object)
+Connector → Parser → Extractor → Normalizer → Detection → Scoring →
+Correlation → Deduplication → Enrichment → Persistence → Export
 ```
 
-## ⚙️ Executando o script
+## Quick Start
 
-Para executar o script bastar passar o parametro -f onion como abaixo:
+```bash
+# Install
+poetry install
 
+# List connectors
+poetry run hunt connector list
+
+# Run hunts
+poetry run hunt run reddit
+poetry run hunt run github
+poetry run hunt run telegram
+poetry run hunt run social
+poetry run hunt run darkweb
+poetry run hunt run all
+
+# Connector lifecycle
+poetry run hunt connector enable reddit
+poetry run hunt connector disable reddit
+
+# Scheduler (once)
+poetry run hunt scheduler run
+
+# Export
+poetry run hunt export misp
+poetry run hunt export splunk
+poetry run hunt export elastic
+poetry run hunt export json
+
+# Score test
+poetry run hunt score test --text "password dump leak"
+
+# Health
+poetry run hunt health
 ```
-python3 main.py -f onion
+
+## Project Layout
+
+See `docs/ARCHITECTURE.md` for the full structure. Key packages:
+
+| Package | Responsibility |
+|---------|----------------|
+| `threat_hunting/core/domain` | Entities, VOs, events, repository ports |
+| `threat_hunting/core/application` | Commands, use cases, pipeline |
+| `threat_hunting/connectors` | Plugin SDK + 29 source connectors |
+| `threat_hunting/detections` | Dynamic rule engine (regex/yara/sigma/…) |
+| `threat_hunting/scoring` | Configurable weighted scoring |
+| `threat_hunting/infrastructure` | DI, OPSEC, persistence, observability |
+| `threat_hunting/exporters` | MISP, STIX, Splunk, OpenSearch, … |
+| `threat_hunting/cli` | Typer CLI |
+| `threat_hunting/web` | Future Django admin (prepared) |
+
+## Configuration
+
+- `config/settings.yaml` — platform settings
+- `config/opsec/profiles.yaml` — proxies, UA, rate limits
+- `config/scoring.yaml` — score weights
+- `config/detection/rules.yaml` — detection rules (no hardcoded rules)
+- `config/connectors/*.yaml` — per-connector options
+
+## Tests
+
+```bash
+poetry run pytest
 ```
 
-### 🔩 Logs e Screenshots
+Coverage target: **≥ 90%**.
 
-Todo arquivo de log gerado sera salvo com a extensão *.json:
+## Legacy
 
-```
-utils/log
-```
-Toda screenshot será salva e enviada para o misp pelo diretorio:
+The original CrawlerDark scripts under `main.py` / `frameworks/` are preserved for reference.
+New development happens in `threat_hunting/`.
 
-```
-utils/screenshot
-```
+## License
 
-
-### Tech
-
-Linguagens utilizadas:
-
-* [TOR] - Browser keep identity secure
-* [Python] - evented I/O for the backend
-
-## ✒️ Autores
-
-* **Eduardo Sartori** - *Desenvolvimento* - [EduardoSartorii](https://github.com/EduardoSartorii/)
-
-## 📄 Licença
-
-Este projeto está sob a licença (GNU GENERAL PUBLIC LICENSE) - veja o arquivo [LICENSE.md](https://github.com/EduardoSartorii/CrawlerDark/blob/main/LICENSE) para detalhes.
-
-⌨️ com ❤️ por [Eduaro Sartori](https://github.com/EduardoSartorii/) 😊
+GNU GPL (see `LICENSE`).

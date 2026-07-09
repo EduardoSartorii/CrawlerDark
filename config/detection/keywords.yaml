@@ -1,0 +1,32 @@
+# Sample watchlists / keywords for governance (loaded by future admin / detection)
+
+watchlists:
+  - name: brand_keywords
+    type: brand
+    entries:
+      - acme
+      - acme-corp
+      - acmecorp
+
+  - name: vip_executives
+    type: vip
+    entries:
+      - Jane Doe
+      - John Smith CEO
+
+  - name: monitored_domains
+    type: domain
+    entries:
+      - acme.com
+      - acme-corp.com
+
+  - name: threat_actors
+    type: threat_actor
+    entries:
+      - LockBit
+      - Clop
+      - ALPHV
+      - Egregor
+      - Ragnar
+      - Darkside
+      - RansomEXX

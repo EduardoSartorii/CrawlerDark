@@ -1,0 +1,41 @@
+# OPSEC profiles — centralized, decoupled from connectors.
+# Connectors reference profiles by name only.
+
+profiles:
+  default:
+    proxy: null
+    user_agent: "ThreatHuntingPlatform/1.0 (+https://example.local/thp)"
+    rate_limit_rps: 1.0
+    max_retries: 3
+    backoff_factor: 2.0
+    timeout_seconds: 30.0
+    verify_tls: true
+    headers: {}
+
+  social:
+    proxy: null
+    user_agent: "Mozilla/5.0 (compatible; ThreatHuntingBot/1.0)"
+    rate_limit_rps: 0.5
+    max_retries: 3
+    backoff_factor: 2.0
+    timeout_seconds: 30.0
+    credentials_ref: null
+
+  darkweb:
+    # SOCKS5h resolves DNS through TOR
+    proxy: "socks5h://127.0.0.1:9050"
+    user_agent: "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/115.0"
+    rate_limit_rps: 0.2
+    max_retries: 5
+    backoff_factor: 3.0
+    timeout_seconds: 60.0
+    verify_tls: false
+
+  threat_intel:
+    proxy: null
+    user_agent: "ThreatHuntingPlatform/1.0"
+    rate_limit_rps: 2.0
+    max_retries: 3
+    backoff_factor: 2.0
+    timeout_seconds: 45.0
+    credentials_ref: null

@@ -1,0 +1,64 @@
+# Scoring engine weights — all configurable, nothing hardcoded in business logic.
+
+weights:
+  regex_match: 5.0
+  yara_match: 15.0
+  sigma_match: 10.0
+  keyword_match: 3.0
+  vip_match: 20.0
+  ioc_match: 12.0
+  credential: 18.0
+  card: 22.0
+  email: 8.0
+  document: 10.0
+  cpf: 15.0
+  cnpj: 15.0
+  domain: 6.0
+  threat_actor: 25.0
+  source_reputation: 5.0
+  context: 4.0
+  ioc_count: 2.0
+  recurrence: 3.0
+  history: 2.0
+  blacklist: 30.0
+  whitelist: -15.0
+  heuristic: 5.0
+
+category_bonus:
+  credential: 10.0
+  card: 15.0
+  leak: 12.0
+  dark_web: 8.0
+  vip_monitoring: 15.0
+  brand_monitoring: 8.0
+  threat_actor: 12.0
+
+source_reputation:
+  darkweb: 10.0
+  deepweb: 8.0
+  paste: 6.0
+  telegram: 5.0
+  github: 4.0
+  misp: 7.0
+  threatfox: 7.0
+  reddit: 3.0
+  news: 2.0
+  rss: 2.0
+
+ioc_type_weights:
+  card: 12.0
+  cpf: 10.0
+  cnpj: 10.0
+  email: 5.0
+  wallet: 8.0
+  hash_sha256: 6.0
+  ip: 4.0
+  domain: 4.0
+  url: 3.0
+
+severity_floor:
+  informational: 0.0
+  low: 15.0
+  medium: 35.0
+  high: 60.0
+  critical: 80.0
