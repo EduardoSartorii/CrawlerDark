@@ -1,0 +1,90 @@
+[tool.poetry]
+name = "threat-hunting"
+version = "1.0.0"
+description = "Professional Threat Hunting Collection Platform — CTI, OSINT, Dark Web, Brand & VIP Monitoring"
+authors = ["CTI Platform Team <cti@platform.internal>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "threat_hunting" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pydantic = { version = "^2.7", extras = ["email"] }
+pydantic-settings = "^2.3"
+sqlalchemy = { version = "^2.0", extras = ["asyncio"] }
+alembic = "^1.13"
+httpx = { version = "^0.27", extras = ["http2"] }
+beautifulsoup4 = "^4.12"
+lxml = "^5.2"
+pymisp = "^2.4"
+redis = { version = "^5.0", extras = ["hiredis"] }
+apscheduler = "^3.10"
+structlog = "^24.1"
+pyyaml = "^6.0"
+typer = { version = "^0.12", extras = ["all"] }
+dependency-injector = "^4.41"
+opentelemetry-api = "^1.24"
+opentelemetry-sdk = "^1.24"
+opentelemetry-instrumentation-httpx = "^0.45b0"
+opentelemetry-exporter-otlp = "^1.24"
+prometheus-client = "^0.20"
+aiofiles = "^23.2"
+python-dateutil = "^2.9"
+tldextract = "^5.1"
+yara-python = "^4.5"
+stix2 = "^3.0"
+taxii2-client = "^2.3"
+ujson = "^5.9"
+tenacity = "^8.3"
+cryptography = "^42.0"
+aiosqlite = "^0.20"
+asyncpg = "^0.29"
+feedparser = "^6.0"
+praw = "^7.7"
+pygithub = "^2.3"
+telethon = "^1.36"
+ioc-finder = "^8.0"
+validators = "^0.28"
+xxhash = "^3.4"
+rapidfuzz = "^3.9"
+pandas = "^2.2"
+pyarrow = "^16.0"
+boto3 = "^1.34"
+rich = "^13.7"
+click = "^8.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2"
+pytest-asyncio = "^0.23"
+pytest-cov = "^5.0"
+pytest-mock = "^3.14"
+pytest-httpx = "^0.30"
+hypothesis = "^6.100"
+faker = "^25.2"
+factory-boy = "^3.3"
+mypy = "^1.10"
+ruff = "^0.4"
+pre-commit = "^3.7"
+
+[tool.poetry.scripts]
+hunt = "threat_hunting.cli.app:app"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "--cov=threat_hunting --cov-report=term-missing"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "T20", "SIM", "TCH", "ARG"]
+ignore = ["T201", "B008"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

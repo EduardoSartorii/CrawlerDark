@@ -1,0 +1,53 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Scoring Engine — weight configuration
+# All weights are additive. Final score is clamped to [0, 10].
+# ─────────────────────────────────────────────────────────────────────────────
+
+weights:
+  # Indicator type weights
+  ioc_match: 2.5
+  credential_match: 3.0
+  card_match: 3.5
+  cpf_match: 2.0
+  cnpj_match: 1.5
+  email_match: 1.0
+  domain_match: 1.5
+  wallet_match: 2.0
+
+  # Rule-based weights
+  yara_match: 2.0
+  sigma_match: 2.5
+  regex_match: 1.0
+  keyword_match: 1.0
+
+  # Context weights
+  vip_match: 3.0
+  threat_actor_match: 2.5
+  brand_match: 2.0
+
+  # Density / recurrence
+  high_ioc_density: 1.5    # triggered when IOC count > threshold
+  ioc_density_threshold: 10
+  recurrence_bonus: 0.5     # per prior occurrence in the last 30 days
+
+  # Source reputation multipliers
+  source_reputation:
+    darkweb: 1.5
+    deepweb: 1.4
+    telegram: 1.2
+    discord: 1.1
+    paste: 1.3
+    github: 1.0
+    social: 0.8
+    feed: 0.5
+    api: 0.7
+
+severity_thresholds:
+  critical: 8.0
+  high: 6.0
+  medium: 4.0
+  low: 2.0
+  info: 0.0
+
+max_score: 10.0
+min_score: 0.0
