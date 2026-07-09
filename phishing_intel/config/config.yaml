@@ -1,0 +1,94 @@
+# Phishing Intelligence Platform Configuration
+# Operational settings for CTI analysis pipeline
+
+database:
+  url: "sqlite:///./phishing_intel.db"
+  echo: false
+  pool_size: 5
+
+misp:
+  url: "https://misp.example.com"
+  api_key: "${MISP_API_KEY}"
+  verify_ssl: true
+  default_distribution: 1
+  default_threat_level: 2
+  default_analysis: 1
+  org_id: 1
+
+collection:
+  timeout: 30
+  max_redirects: 5
+  user_agents:
+    desktop_chrome: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    desktop_edge: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0"
+    desktop_firefox: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0"
+    android_chrome: "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+    iphone_safari: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
+
+evidence:
+  storage_path: "./evidence"
+  preserve_raw_html: true
+  preserve_raw_javascript: true
+  preserve_screenshots: true
+
+audit:
+  storage_path: "./audit"
+  log_all_operations: true
+
+correlation:
+  weights:
+    fingerprint_match: 35
+    certificate_match: 30
+    dom_pattern_match: 20
+    javascript_pattern_match: 15
+    asn_match: 10
+    provider_match: 8
+    brand_match: 12
+  confidence_thresholds:
+    low: 39
+    medium: 69
+    high: 100
+
+brands:
+  financial:
+    - itau
+    - bradesco
+    - santander
+    - bb
+    - caixa
+    - nubank
+    - inter
+    - c6bank
+    - picpay
+  loyalty:
+    - livelo
+    - smiles
+    - tudoazul
+    - latam pass
+  marketplace:
+    - mercadolivre
+    - amazon
+    - shopee
+    - magalu
+  telecom:
+    - vivo
+    - claro
+    - tim
+    - oi
+  fintech:
+    - nubank
+    - picpay
+    - mercado pago
+    - pagseguro
+
+phishing_types:
+  - account_takeover
+  - credential_harvesting
+  - identity_theft
+  - card_harvesting
+  - otp_harvesting
+  - generic_data_collection
+
+logging:
+  level: INFO
+  format: json
