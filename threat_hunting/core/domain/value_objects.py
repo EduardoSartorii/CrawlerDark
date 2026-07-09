@@ -15,7 +15,7 @@ Business rules
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Mapping
+from typing import ClassVar, Mapping
 
 
 @dataclass(frozen=True, slots=True, order=True)
@@ -28,8 +28,8 @@ class Score:
 
     value: float
 
-    MIN: float = 0.0
-    MAX: float = 100.0
+    MIN: ClassVar[float] = 0.0
+    MAX: ClassVar[float] = 100.0
 
     def __post_init__(self) -> None:
         clamped = max(self.MIN, min(self.MAX, float(self.value)))

@@ -48,6 +48,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+asyncio_mode = "auto"
 filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.coverage.run]

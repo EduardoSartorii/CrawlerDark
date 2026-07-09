@@ -18,12 +18,16 @@ Business rules
 from __future__ import annotations
 
 from enum import Enum
-from functools import total_ordering
 
 
-@total_ordering
 class _OrderedStrEnum(str, Enum):
-    """A string enum whose members are ordered by declaration order."""
+    """A string enum whose members are ordered by declaration order.
+
+    ``str`` already defines the rich-comparison operators (lexicographic), so we
+    override *all four* explicitly to order by declaration position rather than
+    relying on :func:`functools.total_ordering` (which only fills in missing
+    operators and would leave ``str``'s lexicographic ``__gt__`` in place).
+    """
 
     def _order(self) -> int:
         members = list(type(self).__members__.values())
@@ -33,6 +37,21 @@ class _OrderedStrEnum(str, Enum):
         if not isinstance(other, type(self)):
             return NotImplemented
         return self._order() < other._order()
+
+    def __le__(self, other: object) -> bool:  # noqa: D401 - operator
+        if not isinstance(other, type(self)):
+            return NotImplemented
+        return self._order() <= other._order()
+
+    def __gt__(self, other: object) -> bool:  # noqa: D401 - operator
+        if not isinstance(other, type(self)):
+            return NotImplemented
+        return self._order() > other._order()
+
+    def __ge__(self, other: object) -> bool:  # noqa: D401 - operator
+        if not isinstance(other, type(self)):
+            return NotImplemented
+        return self._order() >= other._order()
 
 
 class Severity(_OrderedStrEnum):

@@ -14,7 +14,12 @@ from contextlib import contextmanager
 from typing import Iterator
 
 try:
-    from prometheus_client import Counter, Histogram, start_http_server
+    from prometheus_client import (
+        CollectorRegistry,
+        Counter,
+        Histogram,
+        start_http_server,
+    )
 
     _PROM = True
 except Exception:  # noqa: BLE001 - optional
@@ -47,19 +52,27 @@ class Metrics:
     def __init__(self, *, enabled: bool = True) -> None:
         self.enabled = enabled and _PROM
         if self.enabled:
+            # Each facade owns a private registry so multiple instances (e.g.
+            # across tests or re-wired containers) never clash in the global one.
+            self._registry = CollectorRegistry()
             self.findings_total = Counter(
-                "th_findings_total", "Findings produced", ["connector", "severity"]
+                "th_findings_total", "Findings produced", ["connector", "severity"],
+                registry=self._registry,
             )
             self.exports_total = Counter(
-                "th_exports_total", "Findings exported", ["exporter"]
+                "th_exports_total", "Findings exported", ["exporter"],
+                registry=self._registry,
             )
             self.pipeline_duration = Histogram(
-                "th_pipeline_duration_seconds", "Pipeline duration", ["connector"]
+                "th_pipeline_duration_seconds", "Pipeline duration", ["connector"],
+                registry=self._registry,
             )
             self.stage_errors = Counter(
-                "th_stage_errors_total", "Pipeline stage errors", ["stage"]
+                "th_stage_errors_total", "Pipeline stage errors", ["stage"],
+                registry=self._registry,
             )
         else:
+            self._registry = None
             noop = _NoopMetric()
             self.findings_total = noop
             self.exports_total = noop
@@ -69,7 +82,7 @@ class Metrics:
     def serve(self, port: int) -> None:
         """Start the Prometheus metrics HTTP server (if available)."""
         if self.enabled:
-            start_http_server(port)
+            start_http_server(port, registry=self._registry)
 
 
 @contextmanager
