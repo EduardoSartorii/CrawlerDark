@@ -1,0 +1,35 @@
+rules:
+  - id: "rule-regex-credential"
+    name: "Credential regex"
+    enabled: true
+    type: "regex"
+    pattern: "(credential|token|password)"
+    tags: ["credential_hunting"]
+    weight: 20
+  - id: "rule-keyword-leak"
+    name: "Leak keyword"
+    enabled: true
+    type: "keyword"
+    pattern: "leak"
+    tags: ["leak_hunting"]
+    weight: 15
+  - id: "rule-ioc-match"
+    name: "IOC watchlist match"
+    enabled: true
+    type: "ioc_match"
+    tags: ["ioc_hunting"]
+    weight: 25
+  - id: "rule-threat-actor"
+    name: "Threat actor match"
+    enabled: true
+    type: "threat_actor_match"
+    tags: ["threat_actor_discovery"]
+    weight: 20
+  - id: "rule-threshold-indicators"
+    name: "Indicator threshold"
+    enabled: true
+    type: "threshold"
+    metadata:
+      minimum_indicators: 1
+    tags: ["heuristics"]
+    weight: 10

@@ -1,0 +1,46 @@
+keywords:
+  - leak
+  - breach
+  - ransomware
+
+watchlists:
+  - example-safe-domain.local
+
+vips:
+  - ceo@example.com
+  - ciso@example.com
+
+companies:
+  - Example Corp
+
+executives:
+  - Jane Doe
+
+brands:
+  - ExampleBrand
+
+domains:
+  - example.com
+
+threat_actors:
+  - blackfox
+  - darkwolf
+
+emails:
+  - security@example.com
+
+cpfs: []
+cnpjs: []
+cards: []
+wallets:
+  - bc1qexample
+telegram_handles:
+  - "@intelwatch"
+github_handles:
+  - org
+ioc_lists:
+  - 198.51.100.10
+  - 198.51.100.20
+yara_rules: []
+regex_rules: []
+sigma_rules: []

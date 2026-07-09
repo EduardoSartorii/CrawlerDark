@@ -1,0 +1,52 @@
+[tool.poetry]
+name = "threat-hunting-platform"
+version = "0.1.0"
+description = "Enterprise-grade threat hunting collection platform with clean architecture and plugin-based connectors."
+authors = ["Cursor Cloud Agent"]
+readme = "README.md"
+packages = [{ include = "threat_hunting" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pydantic = "^2.9.2"
+sqlalchemy = "^2.0.36"
+alembic = "^1.14.0"
+httpx = "^0.28.1"
+beautifulsoup4 = "^4.12.3"
+lxml = "^5.3.0"
+pymisp = "^2.4.198"
+redis = "^5.2.0"
+apscheduler = "^3.10.4"
+structlog = "^24.4.0"
+pyyaml = "^6.0.2"
+typer = "^0.16.0"
+dependency-injector = "^4.42.0"
+opentelemetry-sdk = "^1.28.2"
+opentelemetry-exporter-otlp = "^1.28.2"
+prometheus-client = "^0.21.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+pytest-cov = "^6.0.0"
+anyio = "^4.6.2"
+
+[tool.poetry.scripts]
+hunt = "threat_hunting.cli.app:app"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+addopts = "-q --cov=threat_hunting --cov-report=term-missing --cov-fail-under=90"
+testpaths = ["threat_hunting/tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["threat_hunting"]
+omit = [
+  "threat_hunting/api/*",
+  "threat_hunting/web/*",
+  "threat_hunting/docs/*",
+]
+
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"

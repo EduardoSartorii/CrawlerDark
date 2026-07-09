@@ -1,0 +1,37 @@
+database:
+  url: "sqlite:///./threat_hunting/data/findings.db"
+
+observability:
+  log_level: "INFO"
+  otel_endpoint: null
+
+connector_groups:
+  social:
+    - reddit
+    - telegram
+  darkweb:
+    - telegram
+  all:
+    - reddit
+    - github
+    - telegram
+
+connectors:
+  reddit:
+    enabled: true
+    profile: default
+    keywords:
+      - leak
+      - ransomware
+  github:
+    enabled: true
+    profile: default
+  telegram:
+    enabled: true
+    profile: default
+
+exporters:
+  - json
+  - csv
+
+scheduler_cron: "*/30 * * * *"

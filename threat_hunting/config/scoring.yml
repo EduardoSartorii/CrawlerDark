@@ -1,0 +1,19 @@
+threshold_misp_auto_export: 80
+weights:
+  regex_match: 20
+  keyword_match: 10
+  ioc_match: 20
+  threat_actor_match: 25
+  vip_match: 20
+  credential_match: 15
+  card_match: 15
+  email_match: 10
+  document_match: 10
+  cpf_match: 15
+  cnpj_match: 15
+  domain_match: 10
+  source_reputation: 10
+  context_score: 10
+  ioc_volume: 10
+  recurrence: 5
+  history: 5
