@@ -1,0 +1,19 @@
+app:
+  name: phishing-intel
+  log_level: INFO
+database:
+  url: sqlite:///phishing_intel.db
+misp:
+  enabled: false
+  url: https://misp.local
+  api_key: change-me
+  verify_tls: false
+analysis:
+  request_timeout: 12
+  user_agent: Mozilla/5.0 (CTI Analyzer)
+  attribution_weights:
+    fingerprint: 35
+    certificate: 25
+    asn: 15
+    provider: 10
+    brand: 15
