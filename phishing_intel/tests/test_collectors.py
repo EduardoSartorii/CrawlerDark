@@ -7,6 +7,7 @@ from types import SimpleNamespace
 from phishing_intel.collectors.dns_collector import DnsCollector
 from phishing_intel.collectors.html_collector import HtmlCollector
 from phishing_intel.collectors.infrastructure_collector import InfrastructureCollector
+from phishing_intel.models.infrastructure import DnsRecordSet
 
 
 def test_html_collector_extracts_hash_and_scripts(monkeypatch) -> None:
@@ -45,7 +46,7 @@ def test_infrastructure_collector_with_mocked_whois(monkeypatch) -> None:
             "network": {"name": "GOOGLE", "country": "US"},
         },
     )
-    fake_dns = SimpleNamespace(collect=lambda _: SimpleNamespace(a_records=["8.8.8.8"], mx_records=[], ns_records=[]))
+    fake_dns = SimpleNamespace(collect=lambda _: DnsRecordSet(a_records=["8.8.8.8"], mx_records=[], ns_records=[]))
 
     profile = InfrastructureCollector(dns_collector=fake_dns).collect("google.test")
     assert profile.ip == "8.8.8.8"
