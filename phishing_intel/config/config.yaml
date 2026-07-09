@@ -1,0 +1,14 @@
+database_url: sqlite:///phishing_intel.db
+evidence_path: evidence
+debug: false
+misp:
+  url: null
+  api_key: null
+  verify_tls: true
+  dry_run: true
+render_profiles:
+  - desktop_chrome
+  - desktop_edge
+  - desktop_firefox
+  - android_chrome
+  - iphone_safari

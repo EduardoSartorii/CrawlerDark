@@ -1,105 +1,56 @@
-# Crawler News
+# Phishing Intel
 
-[![N|Solid](https://uploaddeimagens.com.br/images/003/091/892/original/dark.png)](https://nodesource.com/products/nsolid)
+Plataforma profissional de Cyber Threat Intelligence para análise estática,
+classificação, correlação, enriquecimento MISP e atribuição de campanhas de
+phishing recebidas por parceiros de CTI.
 
-Busca de vazamentos na Dark Web
+## Fluxo principal
 
-  - Busca em onion de Threat actor
-  - Adiciona informação no MISP
+1. Recebe URL, HTML e JavaScript já coletados por parceiros.
+2. Analisa DOM, formulários, assets, scripts, IOC's e destinos de exfiltração.
+3. Gera fingerprints de kit e campanha.
+4. Correlaciona com histórico persistido em SQLAlchemy.
+5. Monta evento, atributos, tags locais e objeto `phishing-campaign` para MISP.
+6. Preserva evidências brutas e resultado analítico em `evidence/<campaign_id>/`.
 
-# New Features!
+## Responsabilidade dos módulos
 
-  - Captura de tela do vazamento
- 
+- `collectors/`: coleta secundária de HTML, DNS, SSL e infraestrutura quando artefatos não são fornecidos.
+- `analyzers/`: análise estática de DOM, JavaScript, formulários, exfiltração, marcas e fingerprints.
+- `correlators/`: atribuição por pesos para fingerprint, certificado, ASN, provedor, DOM, JavaScript e marca.
+- `enrichment/`: mapeamento de taxonomias locais, construção de payload MISP e envio via PyMISP.
+- `database/`: modelos SQLAlchemy, sessão transacional e repositório de histórico.
+- `models/`: contratos Pydantic para achados, campanhas, infraestrutura e certificados.
+- `config/`: configuração YAML de banco, evidências, MISP e perfis de renderização.
 
+## Instalação
 
-### Trheat Actors monitorados
-
-- Egregor
-- Ragnar
-- Avaddon
-- Darkside
-- Dopple
-- Ransomexx
-- Ranzyleak
-
-
-### 🔧 Configurando o TOR
-
-Precisamos configurar o tor para podermos utilizar o proxy ao realizar o scraping, neste caso eu utilizei o ubuntu.
-
-Instalando o TOR:
-```
-sudo apt update
-sudo apt install torbrowser-launcher
+```bash
+poetry install
 ```
 
-Vamos criar um arquivo chamado tor_port_0:
-```
-SOCKSPort 9050
-ControlPort 9051
-DataDirectory *Escolha um diretorio para salvar exemplo: /usr/etc/tor*
-```
+## Uso
 
-Execute o comando para dar inicio ao nó:
-
-```
-tor -f tor_port_0
-```
-### 🔧 Instalando o requirements.txt
-
-```
-pip3 install -r requirements.txt
-```
-### ⚙️ Configurando o framework do MISP em frameworks/mispadd.py
-
-Na linha 5 e 6 do código devemos adicionar a chave de autenticação da API do MISP e a url de comunicação com o MISP:
-
-```
-self.key_misp = 'CHAVE-DO-MISP'
-self.url_misp = "URL-DO-MISP"
-```
-Na linha 20 devemos adicionar o número do evento ao qual iremos adicionar os atributos.
-
-```
-self.misp.add_object('EVENT-ID', self.misp_object)
+```bash
+poetry run python main.py \
+  --url https://phish.example/login \
+  --html-file samples/page.html \
+  --js-file samples/page.js
 ```
 
-## ⚙️ Executando o script
+Para analisar somente artefatos locais sem coleta secundária:
 
-Para executar o script bastar passar o parametro -f onion como abaixo:
-
-```
-python3 main.py -f onion
+```bash
+poetry run python main.py --html-file samples/page.html --js-file samples/page.js --no-fetch
 ```
 
-### 🔩 Logs e Screenshots
+Por padrão, MISP roda em `dry_run`. Configure `phishing_intel/config/config.yaml`
+para envio real.
 
-Todo arquivo de log gerado sera salvo com a extensão *.json:
+## Testes
 
-```
-utils/log
-```
-Toda screenshot será salva e enviada para o misp pelo diretorio:
-
-```
-utils/screenshot
+```bash
+poetry run pytest
 ```
 
-
-### Tech
-
-Linguagens utilizadas:
-
-* [TOR] - Browser keep identity secure
-* [Python] - evented I/O for the backend
-
-## ✒️ Autores
-
-* **Eduardo Sartori** - *Desenvolvimento* - [EduardoSartorii](https://github.com/EduardoSartorii/)
-
-## 📄 Licença
-
-Este projeto está sob a licença (GNU GENERAL PUBLIC LICENSE) - veja o arquivo [LICENSE.md](https://github.com/EduardoSartorii/CrawlerDark/blob/main/LICENSE) para detalhes.
-
-⌨️ com ❤️ por [Eduaro Sartori](https://github.com/EduardoSartorii/) 😊
+A cobertura mínima configurada é 80%.
