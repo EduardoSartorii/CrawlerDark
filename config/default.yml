@@ -1,0 +1,152 @@
+environment: development
+
+opsec_profiles:
+  default:
+    name: default
+    user_agent: ThreatHuntingCollection/0.1
+    rate_limit_per_minute: 60
+    retries: 2
+    backoff_seconds: 0.2
+  tor:
+    name: tor
+    socks_proxy: socks5://127.0.0.1:9050
+    user_agent: Mozilla/5.0 ThreatHuntingCollection
+    rate_limit_per_minute: 20
+    retries: 3
+    backoff_seconds: 1.0
+
+connectors:
+  - name: reddit
+    type: static
+    source: reddit
+    enabled: true
+    opsec_profile: default
+    config:
+      category: brand_monitoring
+      items:
+        - title: "Example brand mentioned in phishing thread"
+          description: "Potential phishing kit targeting example.com customers and admin@example.com."
+          tags: ["brand", "phishing"]
+  - name: github
+    type: static
+    source: github
+    enabled: true
+    opsec_profile: default
+    config:
+      category: credential_hunting
+      items:
+        - title: "Credential leak in public repository"
+          description: "Repository contains admin@example.com token and domain example.com."
+          tags: ["github", "credentials"]
+  - name: telegram
+    type: static
+    source: telegram
+    enabled: true
+    opsec_profile: default
+    config:
+      category: vip_monitoring
+      items:
+        - title: "VIP target discussed in Telegram"
+          description: "Actor offers data for CEO of Example Corp."
+          tags: ["telegram", "vip"]
+  - name: darkweb
+    type: static
+    source: darkweb
+    enabled: true
+    opsec_profile: tor
+    config:
+      category: dark_web_monitoring
+      items:
+        - title: "Ransomware leak post for Example Corp"
+          description: "Threat actor claims leaked documents, emails and infrastructure for example.com."
+          tags: ["darkweb", "leak"]
+  - name: threatfox
+    type: static
+    source: threatfox
+    enabled: true
+    opsec_profile: default
+    config:
+      category: ioc_hunting
+      items:
+        - title: "Malware infrastructure observed"
+          description: "IOC 8.8.8.8 and malware.example.net associated with campaign alpha."
+          tags: ["ioc", "malware"]
+
+detection_rules:
+  - id: rule-credential
+    name: Credential language
+    kind: regex
+    pattern: "(password|credential|token|leaked)"
+    severity: high
+    tags: ["credential_hunting"]
+    weight: 3
+  - id: rule-vip
+    name: VIP match
+    kind: keyword
+    pattern: "CEO"
+    severity: high
+    tags: ["vip_monitoring"]
+    weight: 4
+  - id: rule-threat-actor
+    name: Threat actor mention
+    kind: keyword
+    pattern: "Threat actor"
+    severity: critical
+    tags: ["threat_actor"]
+    weight: 5
+
+score_policy:
+  export_threshold: 20
+  weights:
+    detection: 5
+    email: 4
+    domain: 3
+    ip: 2
+    card: 8
+    cpf: 8
+    cnpj: 8
+    credential: 6
+    source:darkweb: 5
+    category:credential_hunting: 5
+    category:vip_monitoring: 5
+  severity_thresholds:
+    info: 0
+    low: 10
+    medium: 20
+    high: 35
+    critical: 70
+
+storage:
+  backend: memory
+  path: data/findings.json
+
+exporters:
+  - name: json
+    type: json
+    enabled: true
+    threshold: 20
+    config:
+      path: exports/findings.ndjson
+
+scheduler:
+  enabled: false
+  interval_minutes: 60
+
+watchlists:
+  keywords: ["password", "credential", "leak", "phishing"]
+  vips: ["CEO", "CFO", "executive"]
+  companies: ["Example Corp"]
+  brands: ["Example"]
+  domains: ["example.com"]
+  threat_actors: ["ransomware", "threat actor"]
+  emails: ["admin@example.com"]
+  cpf: []
+  cnpj: []
+  cards: []
+  wallets: []
+  telegram: []
+  github: []
+  ioc_lists: ["8.8.8.8", "malware.example.net"]
+  yara: []
+  regex: ["password|credential|token"]
+  sigma: []

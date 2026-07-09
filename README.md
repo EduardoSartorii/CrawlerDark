@@ -1,105 +1,75 @@
-# Crawler News
+# Threat Hunting Collection
 
-[![N|Solid](https://uploaddeimagens.com.br/images/003/091/892/original/dark.png)](https://nodesource.com/products/nsolid)
+Enterprise Threat Hunting Collection platform for OSINT, brand monitoring, VIP
+monitoring, dark web monitoring, credential hunting, IOC discovery, correlation,
+scoring, enrichment, persistence and export.
 
-Busca de vazamentos na Dark Web
+## Architecture
 
-  - Busca em onion de Threat actor
-  - Adiciona informação no MISP
+The project follows Clean Architecture, DDD and Hexagonal Architecture:
 
-# New Features!
+- `threat_hunting/core/domain`: canonical `Finding`, indicators, artifacts,
+  relationships, rules, score policies and domain events.
+- `threat_hunting/core/application`: ports and use cases.
+- `threat_hunting/infrastructure`: adapters for config, OPSEC, logging,
+  observability, events, storage, scheduler and integrations.
+- `threat_hunting/connectors`: connector SDK and plugin registry.
+- `threat_hunting/pipelines`: mandatory hunting pipeline.
+- `threat_hunting/cli`: Typer commands.
 
-  - Captura de tela do vazamento
- 
+See `docs/architecture.md` for domain, contracts, patterns and flow.
 
+## Install
 
-### Trheat Actors monitorados
-
-- Egregor
-- Ragnar
-- Avaddon
-- Darkside
-- Dopple
-- Ransomexx
-- Ranzyleak
-
-
-### 🔧 Configurando o TOR
-
-Precisamos configurar o tor para podermos utilizar o proxy ao realizar o scraping, neste caso eu utilizei o ubuntu.
-
-Instalando o TOR:
-```
-sudo apt update
-sudo apt install torbrowser-launcher
+```bash
+poetry install
 ```
 
-Vamos criar um arquivo chamado tor_port_0:
-```
-SOCKSPort 9050
-ControlPort 9051
-DataDirectory *Escolha um diretorio para salvar exemplo: /usr/etc/tor*
-```
+## CLI
 
-Execute o comando para dar inicio ao nó:
-
-```
-tor -f tor_port_0
-```
-### 🔧 Instalando o requirements.txt
-
-```
-pip3 install -r requirements.txt
-```
-### ⚙️ Configurando o framework do MISP em frameworks/mispadd.py
-
-Na linha 5 e 6 do código devemos adicionar a chave de autenticação da API do MISP e a url de comunicação com o MISP:
-
-```
-self.key_misp = 'CHAVE-DO-MISP'
-self.url_misp = "URL-DO-MISP"
-```
-Na linha 20 devemos adicionar o número do evento ao qual iremos adicionar os atributos.
-
-```
-self.misp.add_object('EVENT-ID', self.misp_object)
+```bash
+hunt run reddit
+hunt run github
+hunt run telegram
+hunt run social
+hunt run darkweb
+hunt run all
+hunt connector enable reddit
+hunt connector disable reddit
+hunt scheduler run
+hunt export misp
+hunt export splunk
+hunt export elastic
+hunt score test
 ```
 
-## ⚙️ Executando o script
+## Configuration
 
-Para executar o script bastar passar o parametro -f onion como abaixo:
+Runtime settings live in `config/default.yml`:
 
+- connectors and plugin types;
+- OPSEC profiles with proxies, SOCKS5, user agents, retries and backoff;
+- dynamic detection rules;
+- scoring weights and export thresholds;
+- watchlists for keywords, VIPs, brands, domains, actors, documents and IOCs;
+- storage and exporters.
+
+## Connector SDK
+
+Every connector must inherit `BaseConnector` and implement:
+
+- `connect()`
+- `collect()`
+- `parse()`
+- `normalize()`
+- `health()`
+- `close()`
+
+New connectors can be discovered through the `threat_hunting.connectors` entry
+point group without modifying the core.
+
+## Tests
+
+```bash
+poetry run pytest
 ```
-python3 main.py -f onion
-```
-
-### 🔩 Logs e Screenshots
-
-Todo arquivo de log gerado sera salvo com a extensão *.json:
-
-```
-utils/log
-```
-Toda screenshot será salva e enviada para o misp pelo diretorio:
-
-```
-utils/screenshot
-```
-
-
-### Tech
-
-Linguagens utilizadas:
-
-* [TOR] - Browser keep identity secure
-* [Python] - evented I/O for the backend
-
-## ✒️ Autores
-
-* **Eduardo Sartori** - *Desenvolvimento* - [EduardoSartorii](https://github.com/EduardoSartorii/)
-
-## 📄 Licença
-
-Este projeto está sob a licença (GNU GENERAL PUBLIC LICENSE) - veja o arquivo [LICENSE.md](https://github.com/EduardoSartorii/CrawlerDark/blob/main/LICENSE) para detalhes.
-
-⌨️ com ❤️ por [Eduaro Sartori](https://github.com/EduardoSartorii/) 😊
