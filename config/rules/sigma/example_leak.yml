@@ -1,0 +1,18 @@
+title: Example Combolist Leak Marker
+id: 0d1e5db3-2e29-4b6a-8a3c-2ee63e2f7f0f
+description: Detects textual patterns typical of credential dumps in unstructured content.
+status: experimental
+author: threat-hunting
+level: high
+logsource:
+    product: text
+    service: threat_hunting
+detection:
+    keywords:
+        - "combolist"
+        - "user:pass"
+        - "email:password"
+        - "cvv:"
+    condition: keywords
+tags:
+    - attack.credential_access

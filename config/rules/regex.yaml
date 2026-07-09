@@ -1,0 +1,101 @@
+# =============================================================================
+# Regras Regex carregadas pelo Detection Engine.
+# Cada regra: id, description, pattern, category, severity, confidence, tags.
+# =============================================================================
+
+rules:
+  - id: "regex.email"
+    description: "Detects e-mail addresses (potential exposure)"
+    pattern: "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+    category: "IOC"
+    severity: "LOW"
+    confidence: 60
+    tags: ["email", "pii"]
+
+  - id: "regex.credit_card_generic"
+    description: "PAN-like 13-19 digits (needs Luhn validation downstream)"
+    pattern: "\\b(?:\\d[ -]*?){13,19}\\b"
+    category: "CARD"
+    severity: "HIGH"
+    confidence: 55
+    tags: ["card", "pan"]
+
+  - id: "regex.aws_access_key"
+    description: "AWS Access Key ID"
+    pattern: "AKIA[0-9A-Z]{16}"
+    category: "CREDENTIAL"
+    severity: "CRITICAL"
+    confidence: 95
+    tags: ["credential", "aws", "cloud"]
+
+  - id: "regex.aws_secret"
+    description: "AWS Secret Access Key"
+    pattern: "(?i)aws(.{0,20})?(secret|access).{0,20}?['\"][0-9a-zA-Z/+]{40}['\"]"
+    category: "CREDENTIAL"
+    severity: "CRITICAL"
+    confidence: 90
+    tags: ["credential", "aws"]
+
+  - id: "regex.jwt"
+    description: "JSON Web Token"
+    pattern: "eyJ[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+"
+    category: "CREDENTIAL"
+    severity: "HIGH"
+    confidence: 80
+    tags: ["credential", "token", "jwt"]
+
+  - id: "regex.private_key"
+    description: "PEM Private Key"
+    pattern: "-----BEGIN (?:RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----"
+    category: "CREDENTIAL"
+    severity: "CRITICAL"
+    confidence: 99
+    tags: ["credential", "key"]
+
+  - id: "regex.cpf"
+    description: "Brazilian CPF"
+    pattern: "\\b\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}\\b"
+    category: "DOCUMENT"
+    severity: "HIGH"
+    confidence: 85
+    tags: ["cpf", "pii", "br"]
+
+  - id: "regex.cnpj"
+    description: "Brazilian CNPJ"
+    pattern: "\\b\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}\\b"
+    category: "DOCUMENT"
+    severity: "MEDIUM"
+    confidence: 90
+    tags: ["cnpj", "pii", "br"]
+
+  - id: "regex.wallet_btc"
+    description: "Bitcoin wallet address"
+    pattern: "\\b(bc1[a-z0-9]{25,39}|[13][a-km-zA-HJ-NP-Z1-9]{25,34})\\b"
+    category: "IOC"
+    severity: "MEDIUM"
+    confidence: 75
+    tags: ["crypto", "btc", "wallet"]
+
+  - id: "regex.wallet_eth"
+    description: "Ethereum wallet address"
+    pattern: "\\b0x[a-fA-F0-9]{40}\\b"
+    category: "IOC"
+    severity: "MEDIUM"
+    confidence: 75
+    tags: ["crypto", "eth", "wallet"]
+
+  - id: "regex.telegram_handle"
+    description: "Telegram handle"
+    pattern: "(?<![A-Za-z0-9_])@[A-Za-z][A-Za-z0-9_]{4,31}"
+    category: "OTHER"
+    severity: "LOW"
+    confidence: 50
+    tags: ["telegram", "handle"]
+
+  - id: "regex.cve"
+    description: "CVE identifier"
+    pattern: "\\bCVE-\\d{4}-\\d{4,7}\\b"
+    category: "IOC"
+    severity: "MEDIUM"
+    confidence: 95
+    tags: ["cve", "vuln"]

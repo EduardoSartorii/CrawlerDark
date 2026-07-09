@@ -135,3 +135,13 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+# Threat Hunting platform local state
+data/
+*.sqlite
+*.sqlite3
+*.db
+config/local.*
+.env
+.env.*
+!/.env.example
+threat_hunting/**/__pycache__/

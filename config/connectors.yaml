@@ -1,0 +1,99 @@
+# =============================================================================
+# Conectores disponíveis. Um conector só é ativado se `enabled: true`.
+# `opsec_profile` referencia um perfil de config/settings.yaml → opsec.profiles.
+# =============================================================================
+
+connectors:
+  rss_krebs:
+    type: "rss"
+    enabled: true
+    opsec_profile: "default"
+    options:
+      url: "https://krebsonsecurity.com/feed/"
+      max_items: 25
+
+  rss_bleepingcomputer:
+    type: "rss"
+    enabled: true
+    opsec_profile: "default"
+    options:
+      url: "https://www.bleepingcomputer.com/feed/"
+      max_items: 25
+
+  github_public_search:
+    type: "github"
+    enabled: false
+    opsec_profile: "default"
+    options:
+      query: "\"password\" filename:.env"
+      token: "${env:GITHUB_TOKEN}"
+      max_items: 30
+
+  reddit_netsec:
+    type: "reddit"
+    enabled: false
+    opsec_profile: "default"
+    options:
+      subreddit: "netsec"
+      client_id: "${env:REDDIT_CLIENT_ID}"
+      client_secret: "${env:REDDIT_CLIENT_SECRET}"
+      user_agent: "threat-hunting/0.1"
+
+  threatfox:
+    type: "threatfox"
+    enabled: true
+    opsec_profile: "default"
+    options:
+      days: 1
+      api_key: "${env:THREATFOX_API_KEY}"
+
+  urlhaus:
+    type: "urlhaus"
+    enabled: true
+    opsec_profile: "default"
+    options:
+      feed_url: "https://urlhaus.abuse.ch/downloads/csv_recent/"
+
+  otx:
+    type: "otx"
+    enabled: false
+    opsec_profile: "default"
+    options:
+      api_key: "${env:OTX_API_KEY}"
+      pulses_limit: 20
+
+  paste_scavenger:
+    type: "paste_site"
+    enabled: false
+    opsec_profile: "default"
+    options:
+      seeds:
+        - "https://rentry.co/latest"
+      max_items: 20
+
+  darkweb_generic:
+    type: "darkweb_leak"
+    enabled: false
+    opsec_profile: "tor"
+    options:
+      onion_urls: []
+      max_items: 10
+
+  generic_http:
+    type: "generic_http"
+    enabled: false
+    opsec_profile: "default"
+    options:
+      url: "https://example.com"
+      selectors:
+        title: "h1"
+        body: "article"
+
+  misp_feed:
+    type: "misp"
+    enabled: false
+    opsec_profile: "default"
+    options:
+      url: "${env:MISP_URL}"
+      key: "${env:MISP_KEY}"
+      published_only: true

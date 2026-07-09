@@ -1,0 +1,54 @@
+# =============================================================================
+# Configuração dos exporters.
+# =============================================================================
+
+exporters:
+  json:
+    enabled: true
+    path: "./data/exports/json"
+
+  csv:
+    enabled: true
+    path: "./data/exports/csv"
+
+  misp:
+    enabled: false
+    url: "${env:MISP_URL}"
+    key: "${env:MISP_KEY}"
+    verify_tls: true
+    default_event_id: null           # se null cria um evento por lote
+    distribution: 0
+
+  opencti:
+    enabled: false
+    url: "${env:OPENCTI_URL}"
+    token: "${env:OPENCTI_TOKEN}"
+
+  splunk:
+    enabled: false
+    hec_url: "${env:SPLUNK_HEC_URL}"
+    hec_token: "${env:SPLUNK_HEC_TOKEN}"
+    index: "threat_hunting"
+
+  opensearch:
+    enabled: false
+    url: "${env:OPENSEARCH_URL}"
+    user: "${env:OPENSEARCH_USER}"
+    password: "${env:OPENSEARCH_PASSWORD}"
+    index: "threat-hunting-findings"
+
+  webhook:
+    enabled: false
+    url: "${env:WEBHOOK_URL}"
+    hmac_secret: "${env:WEBHOOK_HMAC_SECRET}"
+
+  stix:
+    enabled: true
+    path: "./data/exports/stix"
+
+  taxii:
+    enabled: false
+    discovery_url: "${env:TAXII_URL}"
+    collection: "threat-hunting"
+    username: "${env:TAXII_USER}"
+    password: "${env:TAXII_PASSWORD}"

@@ -1,0 +1,54 @@
+# =============================================================================
+# Watchlists — keywords, VIPs, marcas, domínios, threat actors etc.
+# Todos os itens são carregados pelo WatchlistRepository.
+# =============================================================================
+
+keywords:
+  - "data breach"
+  - "database leak"
+  - "credit card dump"
+  - "ransomware"
+  - "0day"
+  - "sqli"
+  - "config leak"
+
+brands:
+  - "AcmeCorp"
+  - "ContosoBank"
+
+vips:
+  - name: "CEO Example"
+    aliases: ["c.example", "ceo@example.com"]
+
+executives:
+  - "cto@example.com"
+
+domains:
+  - "example.com"
+  - "acmecorp.com"
+
+emails:
+  - "@example.com"
+
+threat_actors:
+  - "LockBit"
+  - "APT29"
+  - "FIN7"
+  - "Conti"
+  - "BlackCat"
+
+wallets_btc: []
+wallets_eth: []
+
+telegram_handles: []
+github_handles: []
+
+cpf: []
+cnpj: []
+
+ioc_lists:
+  - "config/ioc/known_c2.txt"
+
+yara_rules_dir: "config/rules/yara"
+sigma_rules_dir: "config/rules/sigma"
+regex_rules_file: "config/rules/regex.yaml"

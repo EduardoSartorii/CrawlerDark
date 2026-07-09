@@ -1,0 +1,45 @@
+# =============================================================================
+# Scoring Engine — pesos configuráveis.
+# Score final = clip(sum(component * weight) + source_bonus, 0..100)
+# =============================================================================
+
+base_score: 10
+
+weights:
+  regex_match: 5
+  yara_match: 20
+  sigma_match: 15
+  vip_match: 30
+  ioc_match: 10
+  credential: 25
+  card: 25
+  email: 8
+  document: 15
+  cpf: 20
+  cnpj: 15
+  domain_watch: 15
+  threat_actor: 30
+  brand: 15
+  recurrence: 5
+  indicator_count_step: 2       # +2 pontos a cada IOC adicional (cap em 15)
+
+severity_multiplier:
+  INFO: 0.5
+  LOW: 0.8
+  MEDIUM: 1.0
+  HIGH: 1.2
+  CRITICAL: 1.5
+
+source_bonus:
+  darkweb: 15
+  paste_site: 10
+  telegram: 8
+  github: 5
+  forum: 8
+  news: 2
+  rss: 2
+  api: 3
+
+cap:
+  min: 0
+  max: 100

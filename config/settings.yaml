@@ -1,0 +1,97 @@
+# =============================================================================
+# Threat Hunting Platform — configurações globais
+# =============================================================================
+# Todas as chaves sensíveis DEVEM ser referenciadas via ${env:VAR_NAME}.
+# =============================================================================
+
+app:
+  name: "threat-hunting"
+  environment: "development"       # development | staging | production
+  timezone: "UTC"
+
+logging:
+  level: "INFO"                    # DEBUG | INFO | WARNING | ERROR
+  json: true
+  redact_keys:                     # chaves cujo conteúdo é ocultado
+    - password
+    - token
+    - api_key
+    - authorization
+    - cookie
+
+storage:
+  backend: "sqlalchemy"            # sqlalchemy | json
+  sqlalchemy:
+    url: "sqlite+aiosqlite:///./data/threat_hunting.db"
+    echo: false
+    pool_size: 5
+    max_overflow: 10
+  json:
+    root: "./data/findings"
+
+observability:
+  prometheus:
+    enabled: true
+    port: 9464
+  opentelemetry:
+    enabled: false
+    endpoint: "http://localhost:4317"
+    service_name: "threat-hunting"
+
+opsec:
+  default_profile: "default"
+  profiles:
+    default:
+      proxy: null
+      timeout_seconds: 30
+      retries: 3
+      backoff_seconds: 1.5
+      jitter_seconds: 0.7
+      rate_limit_per_second: 2
+      user_agents:
+        - "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36"
+        - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36"
+      headers:
+        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+        Accept-Language: "en-US,en;q=0.9"
+    tor:
+      proxy: "socks5://127.0.0.1:9050"
+      timeout_seconds: 90
+      retries: 2
+      backoff_seconds: 3.0
+      jitter_seconds: 1.5
+      rate_limit_per_second: 0.5
+      user_agents:
+        - "Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101 Firefox/102.0"
+    aggressive:
+      proxy: null
+      timeout_seconds: 20
+      retries: 5
+      backoff_seconds: 0.8
+      jitter_seconds: 0.3
+      rate_limit_per_second: 10
+
+scheduler:
+  timezone: "UTC"
+  jobs: []                          # jobs concretos em config/scheduler.yaml
+
+exporters:
+  autoexport_score_threshold: 80
+  autoexport_targets:
+    - "misp"
+
+pipeline:
+  # Ordem canônica; qualquer estágio pode ser desabilitado por nome.
+  stages:
+    - "parse"
+    - "normalize"
+    - "extract"
+    - "canonicalize"
+    - "detect"
+    - "score"
+    - "correlate"
+    - "deduplicate"
+    - "enrich"
+    - "persist"
+    - "export"
+  disabled: []

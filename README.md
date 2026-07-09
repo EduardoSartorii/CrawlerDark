@@ -1,105 +1,93 @@
-# Crawler News
+# Threat Hunting Platform
 
-[![N|Solid](https://uploaddeimagens.com.br/images/003/091/892/original/dark.png)](https://nodesource.com/products/nsolid)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
-Busca de vazamentos na Dark Web
+Plataforma corporativa de **Cyber Threat Intelligence Collection & Analysis** para
+descoberta automática de ameaças, vazamentos, campanhas maliciosas, IOCs,
+monitoramento de marca, VIP monitoring, dark/deep web monitoring, credential /
+card / leak / document hunting, correlação, enriquecimento e exportação.
 
-  - Busca em onion de Threat actor
-  - Adiciona informação no MISP
+> Este repositório contém a nova plataforma em `threat_hunting/` e mantém o
+> legado (`main.py`, `frameworks/`, `utils/`) apenas por retro-compatibilidade
+> operacional. O ponto de entrada oficial é a CLI **`hunt`**.
 
-# New Features!
+## Visão geral
 
-  - Captura de tela do vazamento
- 
+- **Clean Architecture + Hexagonal + DDD**. O core não conhece infraestrutura.
+- **Plugin Pattern** para conectores, engines e exportadores.
+- **Event-Driven** interno via barramento in-memory.
+- **OPSEC-first** — todo tráfego passa por proxies/UA/rate-limit configuráveis.
+- **Pipeline determinístico**:
+  `Connector → Parser → Extractor → Normalizer → Detection → Scoring →
+  Correlation → Deduplication → Enrichment → Persistence → Export`.
+- **Storage plugável** (SQLite/Postgres via SQLAlchemy 2, JSON, extensível).
+- **Exporters** para MISP, OpenCTI, Splunk, OpenSearch, STIX 2.1, TAXII,
+  Webhook, JSON, CSV.
+- **Observabilidade** com structlog + Prometheus + OpenTelemetry.
+- **CLI** completa (`hunt run`, `hunt connector`, `hunt scheduler`,
+  `hunt export`, `hunt score`, `hunt health`).
 
+Consulte **[`ARCHITECTURE.md`](ARCHITECTURE.md)** para o blueprint arquitetural
+detalhado (decisões, patterns, entidades, contratos, estrutura e fluxo).
 
-### Trheat Actors monitorados
+## Instalação
 
-- Egregor
-- Ragnar
-- Avaddon
-- Darkside
-- Dopple
-- Ransomexx
-- Ranzyleak
-
-
-### 🔧 Configurando o TOR
-
-Precisamos configurar o tor para podermos utilizar o proxy ao realizar o scraping, neste caso eu utilizei o ubuntu.
-
-Instalando o TOR:
-```
-sudo apt update
-sudo apt install torbrowser-launcher
-```
-
-Vamos criar um arquivo chamado tor_port_0:
-```
-SOCKSPort 9050
-ControlPort 9051
-DataDirectory *Escolha um diretorio para salvar exemplo: /usr/etc/tor*
+```bash
+poetry install
+cp .env.example .env             # preencha se for usar integrações
+poetry run alembic upgrade head  # cria o schema SQLite default
 ```
 
-Execute o comando para dar inicio ao nó:
+## Uso rápido
 
-```
-tor -f tor_port_0
-```
-### 🔧 Instalando o requirements.txt
-
-```
-pip3 install -r requirements.txt
-```
-### ⚙️ Configurando o framework do MISP em frameworks/mispadd.py
-
-Na linha 5 e 6 do código devemos adicionar a chave de autenticação da API do MISP e a url de comunicação com o MISP:
-
-```
-self.key_misp = 'CHAVE-DO-MISP'
-self.url_misp = "URL-DO-MISP"
-```
-Na linha 20 devemos adicionar o número do evento ao qual iremos adicionar os atributos.
-
-```
-self.misp.add_object('EVENT-ID', self.misp_object)
+```bash
+poetry run hunt --help                # lista comandos
+poetry run hunt connector list        # conectores registrados + status
+poetry run hunt run threatfox         # roda um conector específico
+poetry run hunt run all               # roda todos os habilitados
+poetry run hunt scheduler run         # inicia o scheduler
+poetry run hunt export misp           # exporta findings pendentes
+poetry run hunt score test            # roda o motor de score com input textual
+poetry run hunt health                # health-check consolidado
 ```
 
-## ⚙️ Executando o script
-
-Para executar o script bastar passar o parametro -f onion como abaixo:
+## Estrutura
 
 ```
-python3 main.py -f onion
+threat_hunting/
+├── core/              # domain + application (não conhece infra)
+├── infrastructure/    # connectors, engines, storage, exporters, opsec, ...
+├── cli/               # Typer app
+├── database/          # Alembic
+├── api/  web/         # placeholders (FastAPI e Django futuros)
+├── config/            # YAMLs
+└── tests/             # unit + integration
 ```
 
-### 🔩 Logs e Screenshots
+## Adicionando um novo conector
 
-Todo arquivo de log gerado sera salvo com a extensão *.json:
+```python
+from threat_hunting.infrastructure.connectors.base import BaseConnector
+from threat_hunting.infrastructure.connectors.registry import register_connector
 
+@register_connector("mysource")
+class MySourceConnector(BaseConnector):
+    async def collect(self): ...
+    async def parse(self, payload): ...
+    async def normalize(self, parsed): ...
+    async def health(self): ...
 ```
-utils/log
+
+Basta colocar o arquivo em
+`threat_hunting/infrastructure/connectors/implementations/` e o auto-discovery
+o registra. Adicione uma seção correspondente em `config/connectors.yaml`.
+
+## Testes
+
+```bash
+poetry run pytest
 ```
-Toda screenshot será salva e enviada para o misp pelo diretorio:
 
-```
-utils/screenshot
-```
+## Licença
 
-
-### Tech
-
-Linguagens utilizadas:
-
-* [TOR] - Browser keep identity secure
-* [Python] - evented I/O for the backend
-
-## ✒️ Autores
-
-* **Eduardo Sartori** - *Desenvolvimento* - [EduardoSartorii](https://github.com/EduardoSartorii/)
-
-## 📄 Licença
-
-Este projeto está sob a licença (GNU GENERAL PUBLIC LICENSE) - veja o arquivo [LICENSE.md](https://github.com/EduardoSartorii/CrawlerDark/blob/main/LICENSE) para detalhes.
-
-⌨️ com ❤️ por [Eduaro Sartori](https://github.com/EduardoSartorii/) 😊
+GPL-3.0-only. Consulte [`LICENSE`](LICENSE).

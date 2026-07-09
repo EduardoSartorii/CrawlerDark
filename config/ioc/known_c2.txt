@@ -1,0 +1,4 @@
+### Sample known C2 hosts/IPs (exemplo, não usar em produção)
+185.220.101.1
+malicious.example
+c2.evil.example

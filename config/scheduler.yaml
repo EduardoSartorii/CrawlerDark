@@ -1,0 +1,25 @@
+# =============================================================================
+# Jobs periódicos do APScheduler.
+# =============================================================================
+
+jobs:
+  - id: "collect-rss-hourly"
+    connector: "rss_krebs"
+    trigger: "interval"
+    minutes: 60
+
+  - id: "collect-bleeping-hourly"
+    connector: "rss_bleepingcomputer"
+    trigger: "interval"
+    minutes: 60
+
+  - id: "threatfox-daily"
+    connector: "threatfox"
+    trigger: "cron"
+    hour: 3
+    minute: 15
+
+  - id: "urlhaus-hourly"
+    connector: "urlhaus"
+    trigger: "interval"
+    minutes: 30
