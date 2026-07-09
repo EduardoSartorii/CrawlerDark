@@ -1,105 +1,85 @@
-# Crawler News
+# Threat Hunting Collection Platform
 
-[![N|Solid](https://uploaddeimagens.com.br/images/003/091/892/original/dark.png)](https://nodesource.com/products/nsolid)
+Plataforma corporativa modular para Threat Hunting, OSINT, Brand Monitoring, VIP Monitoring,
+Dark/Deep Web monitoring, IOC hunting, correlação e exportação para ecossistema CTI.
 
-Busca de vazamentos na Dark Web
+## Arquitetura
 
-  - Busca em onion de Threat actor
-  - Adiciona informação no MISP
+- Clean Architecture + Hexagonal Architecture
+- Domain Driven Design
+- Event Driven
+- SOLID
+- Repository Pattern + Unit of Work
+- Strategy, Factory, Builder, Adapter, Command, Observer e Plugin Pattern
 
-# New Features!
+Documentação arquitetural completa em `docs/architecture.md`.
 
-  - Captura de tela do vazamento
- 
+## Pipeline canônico
 
+1. Connector
+2. Parser
+3. Extractor
+4. Normalizer
+5. Detection Engine
+6. Scoring Engine
+7. Correlation Engine
+8. Deduplication Engine
+9. Enrichment Engine
+10. Persistence
+11. Export
 
-### Trheat Actors monitorados
+## Stack
 
-- Egregor
-- Ragnar
-- Avaddon
-- Darkside
-- Dopple
-- Ransomexx
-- Ranzyleak
+- Python 3.12+
+- Poetry
+- Pydantic v2
+- SQLAlchemy 2 / Alembic
+- httpx / BeautifulSoup4 / lxml
+- PyMISP
+- Redis
+- APScheduler
+- structlog
+- Typer
+- Dependency Injector
+- OpenTelemetry
+- Prometheus Client
+- pytest
 
+## CLI
 
-### 🔧 Configurando o TOR
+Comandos principais:
 
-Precisamos configurar o tor para podermos utilizar o proxy ao realizar o scraping, neste caso eu utilizei o ubuntu.
+- `hunt run reddit`
+- `hunt run github`
+- `hunt run telegram`
+- `hunt run social`
+- `hunt run darkweb`
+- `hunt run all`
+- `hunt connector enable reddit`
+- `hunt connector disable reddit`
+- `hunt scheduler run`
+- `hunt export misp`
+- `hunt export splunk`
+- `hunt export elastic`
+- `hunt score test`
 
-Instalando o TOR:
-```
-sudo apt update
-sudo apt install torbrowser-launcher
-```
+## Configuração
 
-Vamos criar um arquivo chamado tor_port_0:
-```
-SOCKSPort 9050
-ControlPort 9051
-DataDirectory *Escolha um diretorio para salvar exemplo: /usr/etc/tor*
-```
+Arquivo central: `config/default.yml`
 
-Execute o comando para dar inicio ao nó:
+- Perfis OPSEC por conector
+- Regras dinâmicas de detecção
+- Pesos de scoring
+- Conectores habilitados
+- Threshold de auto-export para MISP
 
-```
-tor -f tor_port_0
-```
-### 🔧 Instalando o requirements.txt
+## Testes
 
-```
-pip3 install -r requirements.txt
-```
-### ⚙️ Configurando o framework do MISP em frameworks/mispadd.py
-
-Na linha 5 e 6 do código devemos adicionar a chave de autenticação da API do MISP e a url de comunicação com o MISP:
-
-```
-self.key_misp = 'CHAVE-DO-MISP'
-self.url_misp = "URL-DO-MISP"
-```
-Na linha 20 devemos adicionar o número do evento ao qual iremos adicionar os atributos.
-
-```
-self.misp.add_object('EVENT-ID', self.misp_object)
-```
-
-## ⚙️ Executando o script
-
-Para executar o script bastar passar o parametro -f onion como abaixo:
-
-```
-python3 main.py -f onion
-```
-
-### 🔩 Logs e Screenshots
-
-Todo arquivo de log gerado sera salvo com a extensão *.json:
-
-```
-utils/log
-```
-Toda screenshot será salva e enviada para o misp pelo diretorio:
-
-```
-utils/screenshot
+```bash
+poetry install
+poetry run pytest
 ```
 
+## Licença
 
-### Tech
-
-Linguagens utilizadas:
-
-* [TOR] - Browser keep identity secure
-* [Python] - evented I/O for the backend
-
-## ✒️ Autores
-
-* **Eduardo Sartori** - *Desenvolvimento* - [EduardoSartorii](https://github.com/EduardoSartorii/)
-
-## 📄 Licença
-
-Este projeto está sob a licença (GNU GENERAL PUBLIC LICENSE) - veja o arquivo [LICENSE.md](https://github.com/EduardoSartorii/CrawlerDark/blob/main/LICENSE) para detalhes.
-
-⌨️ com ❤️ por [Eduaro Sartori](https://github.com/EduardoSartorii/) 😊
+GNU General Public License (GPL).

@@ -1,0 +1,63 @@
+environment: dev
+auto_export_threshold: 70
+
+opsec_profiles:
+  - name: default
+    user_agent: "ThreatHuntingPlatform/0.1"
+    rate_limit_per_minute: 120
+    retries: 2
+    backoff_seconds: 0.2
+    verify_tls: true
+  - name: darkweb
+    socks5_proxy: "socks5://127.0.0.1:9050"
+    user_agent: "Mozilla/5.0 (compatible; THP-DarkWebBot/1.0)"
+    rate_limit_per_minute: 30
+    retries: 3
+    backoff_seconds: 1.0
+    verify_tls: false
+
+enabled_connectors:
+  reddit: true
+  github: true
+  telegram: true
+  darkweb: true
+
+score_weights:
+  regex_match: 5
+  yara_match: 6
+  vip_match: 20
+  ioc_match: 10
+  credentials: 20
+  cards: 20
+  emails: 5
+  documents: 10
+  cpf: 15
+  cnpj: 15
+  domain: 5
+  threat_actor: 20
+  source_reputation: 8
+  context: 10
+  ioc_quantity: 2
+  recurrence: 3
+  history: 5
+
+dynamic_rules:
+  - rule_id: "rule-keyword-credential"
+    name: "credential keyword"
+    rule_type: "keyword"
+    expression: "credential"
+    enabled: true
+    tags: ["credential", "leak"]
+  - rule_id: "rule-actor-darkspider"
+    name: "threat actor darkspider"
+    rule_type: "threat_actor_match"
+    expression: "darkspider"
+    enabled: true
+    tags: ["actor", "campaign"]
+  - rule_id: "rule-threshold-indicators"
+    name: "minimum indicators"
+    rule_type: "threshold"
+    expression: "indicator threshold"
+    metadata:
+      min_indicators: 1
+    enabled: true
