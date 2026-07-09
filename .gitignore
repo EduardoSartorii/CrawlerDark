@@ -135,3 +135,11 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+# Phishing Intel platform artifacts
+phishing_intel/evidence/
+evidence/
+*.db
+phishing_intel.db
+.pytest_cache/
+.coverage
+htmlcov/

@@ -1,0 +1,70 @@
+# ---------------------------------------------------------------------------
+# Phishing Intelligence Platform - Central Configuration
+# ---------------------------------------------------------------------------
+# This file drives every runtime tunable of the platform. It is loaded by
+# ``phishing_intel.config.settings.load_settings`` and validated against the
+# Pydantic ``Settings`` model, guaranteeing type-safety at startup.
+#
+# Values may be overridden through environment variables using the prefix
+# ``PHISHINTEL_`` (see ``settings.py``). For example ``PHISHINTEL_MISP__URL``
+# overrides ``misp.url``.
+# ---------------------------------------------------------------------------
+
+# General application behaviour.
+app:
+  name: "phishing-intel"
+  # Directory used to preserve the raw evidence (chain of custody / OPSEC).
+  evidence_dir: "./evidence"
+  # When true, network collectors (SSL/DNS/whois/HTML) are allowed to run.
+  # Disable in air-gapped analysis-only deployments.
+  allow_network: true
+
+# Structured logging configuration.
+logging:
+  level: "INFO"
+  # "json" for machine ingestion (SIEM) or "console" for human operators.
+  format: "console"
+
+# Relational persistence (SQLAlchemy). SQLite by default for zero-config runs;
+# point this at PostgreSQL/MySQL for production deployments.
+database:
+  url: "sqlite:///phishing_intel.db"
+  echo: false
+
+# MISP enrichment integration (PyMISP).
+misp:
+  enabled: false
+  url: "https://misp.local"
+  key: "CHANGE-ME"
+  verify_cert: true
+  # Distribution level for created events (0=your org only ... 3=all communities)
+  distribution: 0
+  # Default threat level (1=high, 2=medium, 3=low, 4=undefined).
+  threat_level_id: 2
+  # Analysis status (0=initial, 1=ongoing, 2=completed).
+  analysis: 2
+
+# Correlation / attribution engine tunables. Weights are summed and normalised
+# to a 0-100 attribution score by ``campaign_correlator``.
+correlation:
+  weights:
+    same_fingerprint: 40
+    same_certificate: 25
+    same_asn: 15
+    same_provider: 10
+    same_dom_pattern: 20
+    same_js_pattern: 15
+    same_brand: 10
+  thresholds:
+    low: 39
+    medium: 69
+    # anything >= high_min is "high confidence"
+    high_min: 70
+
+# Multi-profile rendering comparison (desktop vs mobile user agents).
+render_profiles:
+  desktop_chrome: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+  desktop_edge: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36 Edg/124.0"
+  desktop_firefox: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0"
+  android_chrome: "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Mobile Safari/537.36"
+  iphone_safari: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1"

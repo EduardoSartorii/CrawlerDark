@@ -1,0 +1,61 @@
+[tool.poetry]
+# ---------------------------------------------------------------------------
+# Phishing Intelligence Platform
+# ---------------------------------------------------------------------------
+# Professional Cyber Threat Intelligence (CTI) platform focused on the
+# analysis, classification, correlation, enrichment and attribution of
+# phishing campaigns received from CTI partners.
+#
+# The platform is intentionally built around the idea that partners usually
+# already provide the HTML/JavaScript artifacts. Therefore the *analysis*
+# pipeline is the primary flow and *collection* (fetching the HTML) is a
+# fallback secondary flow. See ``phishing_intel/main.py`` for the orchestrator.
+# ---------------------------------------------------------------------------
+name = "phishing-intel"
+version = "1.0.0"
+description = "Professional CTI platform for phishing campaign analysis, correlation and MISP enrichment."
+authors = ["CTI Engineering <cti@example.com>"]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+packages = [{ include = "phishing_intel", from = ".." }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pydantic = "^2.6"
+SQLAlchemy = "^2.0"
+alembic = "^1.13"
+pymisp = "^2.4"
+requests = "^2.31"
+beautifulsoup4 = "^4.12"
+lxml = "^5.0"
+cryptography = "^42.0"
+dnspython = "^2.6"
+ipwhois = "^1.2"
+PyYAML = "^6.0"
+structlog = "^24.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+pytest-cov = "^5.0"
+pytest-mock = "^3.12"
+
+[tool.poetry.scripts]
+phishing-intel = "phishing_intel.main:cli"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+# Test discovery + coverage configuration. The minimum required coverage for
+# the project is 80% as mandated by the delivery specification.
+testpaths = ["tests"]
+addopts = "-ra -q --cov=phishing_intel --cov-report=term-missing --cov-fail-under=80"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+branch = true
+omit = [
+    "*/tests/*",
+    "*/__init__.py",
+]
